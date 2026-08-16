@@ -31,4 +31,16 @@ void main() {
     expect(find.text('DEG'), findsOneWidget);
     expect(find.text('π'), findsOneWidget);
   });
+
+  testWidgets('renders history and memory controls', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: CalculatorScreen(),
+      ),
+    );
+
+    expect(find.text('History'), findsOneWidget);
+    expect(find.text('MS'), findsOneWidget);
+    expect(find.text('MR'), findsOneWidget);
+  });
 }

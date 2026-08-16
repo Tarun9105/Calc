@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smartcalc/features/calculator/domain/angle_mode.dart';
+import 'package:smartcalc/features/calculator/application/calculator_controller.dart';
 import 'package:smartcalc/features/calculator/domain/calculator_engine.dart';
 import 'package:smartcalc/features/calculator/domain/calculator_error.dart';
 
@@ -67,6 +68,32 @@ void main() {
     test('rejects malformed expressions', () {
       final result = engine.evaluate('2 + * 3');
       expect(result.error, CalculatorError.invalidExpression);
+    });
+  });
+
+  group('CalculatorController', () {
+    test('stores successful evaluations in history', () {
+      final controller = CalculatorController();
+      controller.append('2');
+      controller.append('+');
+      controller.append('2');
+      controller.evaluate();
+
+      expect(controller.state.display, '4');
+      expect(controller.state.history, hasLength(1));
+      expect(controller.state.history.first.expression, '2+2');
+      expect(controller.state.history.first.result, '4');
+    });
+
+    test('supports memory store and recall', () {
+      final controller = CalculatorController();
+      controller.append('9');
+      controller.memoryStore();
+      controller.clear();
+      controller.memoryRecall();
+
+      expect(controller.state.memoryValue, 9);
+      expect(controller.state.display, '9');
     });
   });
 }

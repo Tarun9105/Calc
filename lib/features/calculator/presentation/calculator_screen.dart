@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../application/calculator_controller.dart';
 import '../application/calculator_state.dart';
 import '../domain/angle_mode.dart';
+import '../../history/presentation/history_panel.dart';
+import '../../memory/presentation/memory_toolbar.dart';
 import 'calculator_display.dart';
 import 'calculator_keypad.dart';
 import 'scientific_keypad.dart';
@@ -44,6 +46,26 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     display: _state.display,
                     angleMode: _state.angleMode,
                     errorMessage: _state.errorMessage,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                    child: MemoryToolbar(
+                      memoryValue: _state.memoryValue,
+                      onMemoryClear: _handleMemoryClear,
+                      onMemoryRecall: _handleMemoryRecall,
+                      onMemoryAdd: _handleMemoryAdd,
+                      onMemorySubtract: _handleMemorySubtract,
+                      onMemoryStore: _handleMemoryStore,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                    child: HistoryPanel(
+                      history: _state.history,
+                      onRecall: _handleRecallHistory,
+                      onDelete: _handleDeleteHistory,
+                      onClearAll: _handleClearHistory,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
@@ -109,6 +131,54 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void _handleCycleAngleMode() {
     setState(() {
       _controller.cycleAngleMode();
+    });
+  }
+
+  void _handleRecallHistory(int index) {
+    setState(() {
+      _controller.recallHistory(index);
+    });
+  }
+
+  void _handleDeleteHistory(int index) {
+    setState(() {
+      _controller.deleteHistoryEntry(index);
+    });
+  }
+
+  void _handleClearHistory() {
+    setState(() {
+      _controller.clearHistory();
+    });
+  }
+
+  void _handleMemoryStore() {
+    setState(() {
+      _controller.memoryStore();
+    });
+  }
+
+  void _handleMemoryRecall() {
+    setState(() {
+      _controller.memoryRecall();
+    });
+  }
+
+  void _handleMemoryClear() {
+    setState(() {
+      _controller.memoryClear();
+    });
+  }
+
+  void _handleMemoryAdd() {
+    setState(() {
+      _controller.memoryAdd();
+    });
+  }
+
+  void _handleMemorySubtract() {
+    setState(() {
+      _controller.memorySubtract();
     });
   }
 }
