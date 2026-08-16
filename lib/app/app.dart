@@ -9,10 +9,10 @@ class SmartCalcApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'SmartCalc',
       theme: buildSmartCalcTheme(),
       home: const CalculatorScreen(),
     );
   }
 }
-

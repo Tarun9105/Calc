@@ -6,6 +6,7 @@
 - Repository initialized locally
 - Planning docs created and committed on `phase/0-planning-foundation`
 - Phase 1 domain layer expanded with stronger scientific function coverage and error handling
+- Phase 2 portrait calculator UI scaffold added on `phase/2-portrait-ui`
 
 ## Branch Strategy
 - `main`
@@ -22,12 +23,14 @@
 - Start with pure-Dart domain code and a Flutter-style folder structure.
 - Add real Flutter wiring once the SDK is available locally.
 - Phase 1 currently supports arithmetic precedence, powers, constants, trig, logs, inverse trig validation, factorial, and clearer domain errors.
+- Phase 2 now includes a stateful calculator screen, display panel, reusable key widget, portrait keypad layout, and a starter widget test.
 
 ## Next Recommended Actions
-- Commit the expanded Phase 1 engine work
-- Move to `phase/2-portrait-ui`
-- Replace the placeholder calculator screen with the portrait layout and keypad components
+- Commit the portrait UI scaffold
+- Once Flutter finishes installing, run `flutter test` and fix any compile/runtime issues
+- Continue into `phase/3-scientific-mode` with landscape scientific controls and advanced function wiring
 
 ## Commit History
 - `020c07c` `docs: add SmartCalc planning foundation`
 - `0aab1ab` `feat: scaffold SmartCalc phase 1 foundation`
+- `64dc443` `feat: expand SmartCalc phase 1 engine`

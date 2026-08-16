@@ -30,6 +30,48 @@ class CalculatorController {
     );
   }
 
+  void toggleSign() {
+    final expression = _state.expression;
+    if (expression.isEmpty || expression == '0') {
+      return;
+    }
+
+    final nextExpression = expression.startsWith('-')
+        ? expression.substring(1)
+        : '-$expression';
+
+    _state = _state.copyWith(
+      expression: nextExpression,
+      display: nextExpression,
+      clearError: true,
+    );
+  }
+
+  void applyPercent() {
+    final expression = _state.expression;
+    if (expression.isEmpty) {
+      return;
+    }
+
+    final parsed = double.tryParse(expression);
+    if (parsed == null) {
+      _state = _state.copyWith(
+        expression: '$expression/100',
+        display: '$expression/100',
+        clearError: true,
+      );
+      return;
+    }
+
+    final value = parsed / 100;
+    final display = _formatValue(value);
+    _state = _state.copyWith(
+      expression: display,
+      display: display,
+      clearError: true,
+    );
+  }
+
   void clear() {
     _state = const CalculatorState();
   }
