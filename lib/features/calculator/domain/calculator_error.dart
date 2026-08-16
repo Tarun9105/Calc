@@ -3,6 +3,8 @@ enum CalculatorError {
   divideByZero,
   negativeSqrt,
   negativeLog,
+  invalidFactorial,
+  invalidInverseTrig,
   overflow,
 }
 
@@ -17,9 +19,12 @@ extension CalculatorErrorMessage on CalculatorError {
         return 'Cannot take the square root of a negative number';
       case CalculatorError.negativeLog:
         return 'Cannot take the logarithm of a non-positive number';
+      case CalculatorError.invalidFactorial:
+        return 'Factorial is only defined for non-negative integers';
+      case CalculatorError.invalidInverseTrig:
+        return 'Inverse trig input is out of range';
       case CalculatorError.overflow:
         return 'Result too large to display';
     }
   }
 }
-

@@ -34,6 +34,8 @@ class CalculatorEngine {
 }
 
 class _Parser {
+  static const _epsilon = 0.0000000001;
+
   _Parser(this.input, this.angleMode);
 
   final String input;
@@ -76,6 +78,12 @@ class _Parser {
         }
         value /= divisor;
       } else if (_match('%')) {
+        final divisor = _parsePower();
+        if (divisor == 0) {
+          throw const _CalculatorException(CalculatorError.divideByZero);
+        }
+        value %= divisor;
+      } else if (_matchIdentifier('mod')) {
         final divisor = _parsePower();
         if (divisor == 0) {
           throw const _CalculatorException(CalculatorError.divideByZero);
@@ -177,8 +185,14 @@ class _Parser {
       case 'tan':
         return math.tan(_toRadians(value));
       case 'asin':
+        if (value < -1 || value > 1) {
+          throw const _CalculatorException(CalculatorError.invalidInverseTrig);
+        }
         return _fromRadians(math.asin(value));
       case 'acos':
+        if (value < -1 || value > 1) {
+          throw const _CalculatorException(CalculatorError.invalidInverseTrig);
+        }
         return _fromRadians(math.acos(value));
       case 'atan':
         return _fromRadians(math.atan(value));
@@ -199,9 +213,36 @@ class _Parser {
         return math.log(value) / math.ln10;
       case 'abs':
         return value.abs();
+      case 'inv':
+        if (value == 0) {
+          throw const _CalculatorException(CalculatorError.divideByZero);
+        }
+        return 1 / value;
+      case 'square':
+        return value * value;
+      case 'cube':
+        return value * value * value;
+      case 'factorial':
+        return _factorial(value);
       default:
         throw const _CalculatorException(CalculatorError.invalidExpression);
     }
+  }
+
+  double _factorial(double value) {
+    if (value < 0 || (value - value.roundToDouble()).abs() > _epsilon) {
+      throw const _CalculatorException(CalculatorError.invalidFactorial);
+    }
+
+    final integerValue = value.toInt();
+    var result = 1.0;
+    for (var i = 2; i <= integerValue; i++) {
+      result *= i;
+      if (result.isInfinite) {
+        throw const _CalculatorException(CalculatorError.overflow);
+      }
+    }
+    return result;
   }
 
   double _toRadians(double value) {
@@ -249,6 +290,26 @@ class _Parser {
     return true;
   }
 
+  bool _matchIdentifier(String expected) {
+    _skipWhitespace();
+    final end = index + expected.length;
+    if (end > input.length) {
+      return false;
+    }
+
+    final candidate = input.substring(index, end).toLowerCase();
+    if (candidate != expected) {
+      return false;
+    }
+
+    if (end < input.length && _isLetter(input[end])) {
+      return false;
+    }
+
+    index = end;
+    return true;
+  }
+
   bool get _isAtEnd => index >= input.length;
   bool get _peekIsLetter => !_isAtEnd && _isLetter(input[index]);
 
@@ -264,4 +325,3 @@ class _CalculatorException implements Exception {
 
   final CalculatorError error;
 }
-

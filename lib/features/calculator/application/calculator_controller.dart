@@ -12,7 +12,17 @@ class CalculatorController {
   CalculatorState get state => _state;
 
   void append(String value) {
+    final nextValue = _state.errorMessage == null ? value : _normalizeReplacement(value);
     final nextExpression = '${_state.expression}$value';
+    _state = _state.copyWith(
+      expression: _state.errorMessage == null ? nextExpression : nextValue,
+      display: _state.errorMessage == null ? nextExpression : nextValue,
+      clearError: true,
+    );
+  }
+
+  void applyFunction(String functionName) {
+    final nextExpression = '$functionName(${_state.expression.isEmpty ? 0 : _state.expression})';
     _state = _state.copyWith(
       expression: nextExpression,
       display: nextExpression,
@@ -55,6 +65,13 @@ class CalculatorController {
     );
   }
 
+  String _normalizeReplacement(String value) {
+    if (value == '.') {
+      return '0.';
+    }
+    return value;
+  }
+
   String _formatValue(double value) {
     if (value == value.roundToDouble()) {
       return value.toInt().toString();
@@ -62,4 +79,3 @@ class CalculatorController {
     return value.toString();
   }
 }
-
