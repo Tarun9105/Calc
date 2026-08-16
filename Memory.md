@@ -4,7 +4,7 @@
 - Date: 2026-08-16
 - Source specification read from `SmartCalc_Documentation.docx`
 - Repository initialized locally
-- Planning docs created
+- Planning docs created and committed on `phase/0-planning-foundation`
 - Starter implementation beginning with Phase 1 foundation
 
 ## Branch Strategy
@@ -25,5 +25,7 @@
 ## Next Recommended Actions
 - Finish Phase 1 starter engine and tests
 - Add app shell and theme scaffolding
-- Commit planning docs and starter code
+- Commit Phase 1 starter code
 
+## Commit History
+- `020c07c` `docs: add SmartCalc planning foundation`
