@@ -1,3 +1,4 @@
+import '../domain/angle_mode.dart';
 import '../domain/calculator_engine.dart';
 import 'calculator_state.dart';
 
@@ -22,10 +23,32 @@ class CalculatorController {
   }
 
   void applyFunction(String functionName) {
-    final nextExpression = '$functionName(${_state.expression.isEmpty ? 0 : _state.expression})';
+    final target = _state.expression.isEmpty ? '0' : _state.expression;
+    final nextExpression = '$functionName($target)';
     _state = _state.copyWith(
       expression: nextExpression,
       display: nextExpression,
+      clearError: true,
+    );
+  }
+
+  void appendConstant(String constant) {
+    append(constant);
+  }
+
+  void appendPower() {
+    append('^');
+  }
+
+  void cycleAngleMode() {
+    final nextMode = switch (_state.angleMode) {
+      AngleMode.degrees => AngleMode.radians,
+      AngleMode.radians => AngleMode.gradians,
+      AngleMode.gradians => AngleMode.degrees,
+    };
+
+    _state = _state.copyWith(
+      angleMode: nextMode,
       clearError: true,
     );
   }
@@ -90,7 +113,10 @@ class CalculatorController {
   }
 
   void evaluate() {
-    final result = _engine.evaluate(_state.expression);
+    final result = _engine.evaluate(
+      _state.expression,
+      angleMode: _state.angleMode,
+    );
     if (result.isSuccess) {
       final display = _formatValue(result.value!);
       _state = _state.copyWith(

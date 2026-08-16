@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../application/calculator_controller.dart';
 import '../application/calculator_state.dart';
+import '../domain/angle_mode.dart';
 import 'calculator_display.dart';
 import 'calculator_keypad.dart';
+import 'scientific_keypad.dart';
 
 class CalculatorScreen extends StatefulWidget {
   const CalculatorScreen({super.key});
@@ -19,25 +21,43 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final orientation = MediaQuery.of(context).orientation;
+    final isLandscape = orientation == Orientation.landscape;
+
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Row(
           children: [
-            CalculatorDisplay(
-              expression: _state.expression,
-              display: _state.display,
-              errorMessage: _state.errorMessage,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-              child: CalculatorKeypad(
-                onInput: _handleInput,
-                onEvaluate: _handleEvaluate,
-                onClear: _handleClear,
-                onPercent: _handlePercent,
-                onToggleSign: _handleToggleSign,
+            if (isLandscape)
+              ScientificKeypad(
+                angleModeLabel: _state.angleMode.shortLabel,
+                onFunction: _handleFunction,
+                onConstant: _handleInput,
+                onPower: _handlePower,
+                onCycleAngleMode: _handleCycleAngleMode,
               ),
-            ),
+            Expanded(
+              child: Column(
+                children: [
+                  CalculatorDisplay(
+                    expression: _state.expression,
+                    display: _state.display,
+                    angleMode: _state.angleMode,
+                    errorMessage: _state.errorMessage,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                    child: CalculatorKeypad(
+                      onInput: _handleInput,
+                      onEvaluate: _handleEvaluate,
+                      onClear: _handleClear,
+                      onPercent: _handlePercent,
+                      onToggleSign: _handleToggleSign,
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -71,6 +91,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void _handleToggleSign() {
     setState(() {
       _controller.toggleSign();
+    });
+  }
+
+  void _handleFunction(String functionName) {
+    setState(() {
+      _controller.applyFunction(functionName);
+    });
+  }
+
+  void _handlePower() {
+    setState(() {
+      _controller.appendPower();
+    });
+  }
+
+  void _handleCycleAngleMode() {
+    setState(() {
+      _controller.cycleAngleMode();
     });
   }
 }

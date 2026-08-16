@@ -5,6 +5,7 @@ ThemeData buildSmartCalcTheme() {
   const operator = Color(0xFFFF9500);
   const digit = Color(0xFF333333);
   const function = Color(0xFFA5A5A5);
+  const scientific = Color(0xFF1C1C1C);
 
   return ThemeData(
     brightness: Brightness.dark,
@@ -30,6 +31,7 @@ ThemeData buildSmartCalcTheme() {
         digit: digit,
         function: function,
         operator: operator,
+        scientific: scientific,
       ),
     ],
   );
@@ -40,22 +42,26 @@ class SmartCalcColors extends ThemeExtension<SmartCalcColors> {
     required this.digit,
     required this.function,
     required this.operator,
+    required this.scientific,
   });
 
   final Color digit;
   final Color function;
   final Color operator;
+  final Color scientific;
 
   @override
   SmartCalcColors copyWith({
     Color? digit,
     Color? function,
     Color? operator,
+    Color? scientific,
   }) {
     return SmartCalcColors(
       digit: digit ?? this.digit,
       function: function ?? this.function,
       operator: operator ?? this.operator,
+      scientific: scientific ?? this.scientific,
     );
   }
 
@@ -72,7 +78,7 @@ class SmartCalcColors extends ThemeExtension<SmartCalcColors> {
       digit: Color.lerp(digit, other.digit, t) ?? digit,
       function: Color.lerp(function, other.function, t) ?? function,
       operator: Color.lerp(operator, other.operator, t) ?? operator,
+      scientific: Color.lerp(scientific, other.scientific, t) ?? scientific,
     );
   }
 }
-

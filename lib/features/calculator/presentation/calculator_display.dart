@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../domain/angle_mode.dart';
+
 class CalculatorDisplay extends StatelessWidget {
   const CalculatorDisplay({
     required this.expression,
     required this.display,
+    required this.angleMode,
     required this.errorMessage,
     super.key,
   });
 
   final String expression;
   final String display;
+  final AngleMode angleMode;
   final String? errorMessage;
 
   @override
@@ -27,6 +31,25 @@ class CalculatorDisplay extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 14),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  angleMode.shortLabel,
+                  style: expressionStyle.copyWith(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
             Text(
               expression.isEmpty ? '0' : expression,
               maxLines: 1,
