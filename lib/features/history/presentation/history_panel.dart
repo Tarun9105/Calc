@@ -18,17 +18,34 @@ class HistoryPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final muted = colorScheme.onSurface.withValues(alpha: 0.7);
+
     if (history.isEmpty) {
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
+          color: colorScheme.onSurface.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Text(
-          'No history yet. Complete a calculation to reuse it here.',
-          style: TextStyle(color: Colors.white70),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'History',
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'No history yet. Complete a calculation to reuse it here.',
+              style: TextStyle(color: muted),
+            ),
+          ],
         ),
       );
     }
@@ -36,7 +53,7 @@ class HistoryPanel extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(maxHeight: 220),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: colorScheme.onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -45,10 +62,10 @@ class HistoryPanel extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 12, 12, 8),
             child: Row(
               children: [
-                const Text(
+                Text(
                   'History',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: colorScheme.onSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -70,12 +87,12 @@ class HistoryPanel extends StatelessWidget {
                 return ListTile(
                   title: Text(
                     entry.expression,
-                    style: const TextStyle(color: Colors.white70),
+                    style: TextStyle(color: muted),
                   ),
                   subtitle: Text(
                     entry.result,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),

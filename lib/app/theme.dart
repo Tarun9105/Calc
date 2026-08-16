@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
 
-ThemeData buildSmartCalcTheme() {
-  const background = Color(0xFF000000);
+import '../features/settings/domain/app_settings.dart';
+
+ThemeData buildSmartCalcTheme({
+  CalculatorThemeMode themeMode = CalculatorThemeMode.dark,
+}) {
+  final isLight = themeMode == CalculatorThemeMode.light;
+  final background = isLight ? const Color(0xFFF2F2F7) : const Color(0xFF000000);
   const operator = Color(0xFFFF9500);
-  const digit = Color(0xFF333333);
+  final digit = isLight ? const Color(0xFFE0E0E6) : const Color(0xFF333333);
   const function = Color(0xFFA5A5A5);
-  const scientific = Color(0xFF1C1C1C);
+  final scientific = isLight ? const Color(0xFFD1D1D6) : const Color(0xFF1C1C1C);
+  final textOnSurface = isLight ? Colors.black : Colors.white;
 
   return ThemeData(
-    brightness: Brightness.dark,
+    brightness: isLight ? Brightness.light : Brightness.dark,
     scaffoldBackgroundColor: background,
-    colorScheme: const ColorScheme.dark(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: operator,
+      brightness: isLight ? Brightness.light : Brightness.dark,
       surface: background,
       primary: operator,
       secondary: digit,
     ),
-    textTheme: const TextTheme(
+    textTheme: TextTheme(
       displayLarge: TextStyle(
         fontSize: 64,
         fontWeight: FontWeight.w300,
-        color: Colors.white,
+        color: textOnSurface,
       ),
       bodyLarge: TextStyle(
         fontSize: 18,
-        color: Colors.white70,
+        color: isLight ? Colors.black87 : Colors.white70,
       ),
     ),
-    extensions: const <ThemeExtension<dynamic>>[
+    extensions: <ThemeExtension<dynamic>>[
       SmartCalcColors(
         digit: digit,
         function: function,

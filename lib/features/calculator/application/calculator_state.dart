@@ -1,5 +1,6 @@
 import '../domain/angle_mode.dart';
 import '../../history/domain/history_entry.dart';
+import '../../settings/domain/app_settings.dart';
 
 class CalculatorState {
   const CalculatorState({
@@ -8,6 +9,7 @@ class CalculatorState {
     this.angleMode = AngleMode.degrees,
     this.history = const <HistoryEntry>[],
     this.memoryValue,
+    this.settings = const AppSettings(),
     this.errorMessage,
   });
 
@@ -16,6 +18,7 @@ class CalculatorState {
   final AngleMode angleMode;
   final List<HistoryEntry> history;
   final double? memoryValue;
+  final AppSettings settings;
   final String? errorMessage;
 
   CalculatorState copyWith({
@@ -25,6 +28,7 @@ class CalculatorState {
     List<HistoryEntry>? history,
     double? memoryValue,
     bool clearMemoryValue = false,
+    AppSettings? settings,
     String? errorMessage,
     bool clearError = false,
   }) {
@@ -34,6 +38,7 @@ class CalculatorState {
       angleMode: angleMode ?? this.angleMode,
       history: history ?? this.history,
       memoryValue: clearMemoryValue ? null : memoryValue ?? this.memoryValue,
+      settings: settings ?? this.settings,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
   }

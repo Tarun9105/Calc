@@ -25,28 +25,31 @@ class CalculatorKeyButton extends StatelessWidget {
       child: Semantics(
         button: true,
         label: semanticLabel,
-        child: AspectRatio(
-          aspectRatio: flex == 2 ? 2.1 : 1,
+        child: SizedBox(
+          height: 58,
           child: Padding(
-            padding: const EdgeInsets.all(6),
+            padding: const EdgeInsets.all(4),
             child: Material(
               color: backgroundColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(flex == 2 ? 40 : 999),
+                borderRadius: BorderRadius.circular(flex == 2 ? 34 : 999),
               ),
               child: InkWell(
-                borderRadius: BorderRadius.circular(flex == 2 ? 40 : 999),
+                borderRadius: BorderRadius.circular(flex == 2 ? 34 : 999),
                 onTap: onPressed,
                 child: Align(
                   alignment: flex == 2 ? Alignment.centerLeft : Alignment.center,
                   child: Padding(
-                    padding: EdgeInsets.only(left: flex == 2 ? 28 : 0),
-                    child: Text(
-                      label,
-                      style: TextStyle(
-                        color: foregroundColor,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w400,
+                    padding: EdgeInsets.only(left: flex == 2 ? 24 : 0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        label,
+                        style: TextStyle(
+                          color: foregroundColor,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),

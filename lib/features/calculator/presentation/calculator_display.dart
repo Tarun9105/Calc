@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../domain/angle_mode.dart';
+import '../../settings/domain/app_settings.dart';
 
 class CalculatorDisplay extends StatelessWidget {
   const CalculatorDisplay({
     required this.expression,
     required this.display,
     required this.angleMode,
+    required this.settings,
     required this.errorMessage,
     super.key,
   });
@@ -14,13 +16,24 @@ class CalculatorDisplay extends StatelessWidget {
   final String expression;
   final String display;
   final AngleMode angleMode;
+  final AppSettings settings;
   final String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scale = settings.textScale.scale;
     final displayStyle = theme.textTheme.displayLarge ?? const TextStyle(fontSize: 64);
     final expressionStyle = theme.textTheme.bodyLarge ?? const TextStyle(fontSize: 18);
+    final mutedText = settings.themeMode == CalculatorThemeMode.light
+        ? Colors.black54
+        : Colors.white60;
+    final primaryText = settings.themeMode == CalculatorThemeMode.light
+        ? Colors.black
+        : Colors.white;
+    final badgeColor = settings.themeMode == CalculatorThemeMode.light
+        ? Colors.black.withValues(alpha: 0.08)
+        : Colors.white10;
 
     return Expanded(
       child: Container(
@@ -37,14 +50,14 @@ class CalculatorDisplay extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 14),
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white10,
+                  color: badgeColor,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
                   angleMode.shortLabel,
                   style: expressionStyle.copyWith(
-                    color: Colors.white70,
-                    fontSize: 13,
+                    color: mutedText,
+                    fontSize: 13 * scale,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -54,7 +67,10 @@ class CalculatorDisplay extends StatelessWidget {
               expression.isEmpty ? '0' : expression,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: expressionStyle.copyWith(color: Colors.white60),
+              style: expressionStyle.copyWith(
+                color: mutedText,
+                fontSize: 18 * scale,
+              ),
             ),
             const SizedBox(height: 12),
             FittedBox(
@@ -64,7 +80,8 @@ class CalculatorDisplay extends StatelessWidget {
                 display,
                 textAlign: TextAlign.right,
                 style: displayStyle.copyWith(
-                  color: errorMessage == null ? Colors.white : const Color(0xFFFF7B72),
+                  fontSize: 64 * scale,
+                  color: errorMessage == null ? primaryText : const Color(0xFFFF7B72),
                 ),
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:smartcalc/features/calculator/domain/angle_mode.dart';
 import 'package:smartcalc/features/calculator/application/calculator_controller.dart';
 import 'package:smartcalc/features/calculator/domain/calculator_engine.dart';
 import 'package:smartcalc/features/calculator/domain/calculator_error.dart';
+import 'package:smartcalc/features/settings/domain/app_settings.dart';
 
 void main() {
   const engine = CalculatorEngine();
@@ -94,6 +95,21 @@ void main() {
 
       expect(controller.state.memoryValue, 9);
       expect(controller.state.display, '9');
+    });
+
+    test('updates settings preferences', () {
+      final controller = CalculatorController();
+      controller.updateThemeMode(CalculatorThemeMode.light);
+      controller.updateTextScale(TextScalePreference.large);
+      controller.updateDecimalPrecision(4);
+      controller.updateHapticsEnabled(false);
+      controller.updateSoundEnabled(true);
+
+      expect(controller.state.settings.themeMode, CalculatorThemeMode.light);
+      expect(controller.state.settings.textScale, TextScalePreference.large);
+      expect(controller.state.settings.decimalPrecision, 4);
+      expect(controller.state.settings.hapticsEnabled, isFalse);
+      expect(controller.state.settings.soundEnabled, isTrue);
     });
   });
 }

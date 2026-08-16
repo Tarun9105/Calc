@@ -21,11 +21,12 @@ class MemoryToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasMemory = memoryValue != null;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: colorScheme.onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Wrap(
@@ -42,9 +43,9 @@ class MemoryToolbar extends StatelessWidget {
             Chip(
               label: Text(
                 'M ${_format(memoryValue!)}',
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: colorScheme.onSurface),
               ),
-              backgroundColor: Colors.white10,
+              backgroundColor: colorScheme.onSurface.withValues(alpha: 0.08),
               side: BorderSide.none,
             ),
         ],

@@ -1,8 +1,11 @@
 import '../domain/angle_mode.dart';
 import '../domain/calculator_engine.dart';
+import '../domain/calculator_error.dart';
 import '../../history/application/history_repository.dart';
 import '../../history/domain/history_entry.dart';
 import '../../memory/application/memory_repository.dart';
+import '../../settings/application/settings_repository.dart';
+import '../../settings/domain/app_settings.dart';
 import 'calculator_state.dart';
 
 class CalculatorController {
@@ -10,18 +13,22 @@ class CalculatorController {
     CalculatorEngine engine = const CalculatorEngine(),
     HistoryRepository? historyRepository,
     MemoryRepository? memoryRepository,
+    SettingsRepository? settingsRepository,
   })  : _engine = engine,
         _historyRepository = historyRepository ?? InMemoryHistoryRepository(),
-        _memoryRepository = memoryRepository ?? InMemoryMemoryRepository() {
+        _memoryRepository = memoryRepository ?? InMemoryMemoryRepository(),
+        _settingsRepository = settingsRepository ?? InMemorySettingsRepository() {
     _state = _state.copyWith(
       history: _historyRepository.load(),
       memoryValue: _memoryRepository.load()?.value,
+      settings: _settingsRepository.load(),
     );
   }
 
   final CalculatorEngine _engine;
   final HistoryRepository _historyRepository;
   final MemoryRepository _memoryRepository;
+  final SettingsRepository _settingsRepository;
   CalculatorState _state = const CalculatorState();
 
   CalculatorState get state => _state;
@@ -114,6 +121,7 @@ class CalculatorController {
       angleMode: _state.angleMode,
       history: _historyRepository.load(),
       memoryValue: _memoryRepository.load()?.value,
+      settings: _settingsRepository.load(),
     );
   }
 
@@ -251,6 +259,30 @@ class CalculatorController {
     );
   }
 
+  void updateThemeMode(CalculatorThemeMode themeMode) {
+    _saveSettings(_state.settings.copyWith(themeMode: themeMode));
+  }
+
+  void updateTextScale(TextScalePreference textScale) {
+    _saveSettings(_state.settings.copyWith(textScale: textScale));
+  }
+
+  void updateDecimalPrecision(int decimalPrecision) {
+    _saveSettings(
+      _state.settings.copyWith(
+        decimalPrecision: decimalPrecision.clamp(2, 10),
+      ),
+    );
+  }
+
+  void updateHapticsEnabled(bool isEnabled) {
+    _saveSettings(_state.settings.copyWith(hapticsEnabled: isEnabled));
+  }
+
+  void updateSoundEnabled(bool isEnabled) {
+    _saveSettings(_state.settings.copyWith(soundEnabled: isEnabled));
+  }
+
   String _normalizeReplacement(String value) {
     if (value == '.') {
       return '0.';
@@ -262,7 +294,7 @@ class CalculatorController {
     if (value == value.roundToDouble()) {
       return value.toInt().toString();
     }
-    return value.toString();
+    return value.toStringAsPrecision(_state.settings.decimalPrecision);
   }
 
   double? _parseDisplayValue() {
@@ -272,5 +304,12 @@ class CalculatorController {
     }
 
     return double.tryParse(_state.expression);
+  }
+
+  void _saveSettings(AppSettings settings) {
+    _state = _state.copyWith(
+      settings: _settingsRepository.save(settings),
+      clearError: true,
+    );
   }
 }

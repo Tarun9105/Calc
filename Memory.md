@@ -9,6 +9,7 @@
 - Phase 2 portrait calculator UI scaffold added on `phase/2-portrait-ui`
 - Phase 3 scientific landscape scaffold added on `phase/3-scientific-mode`
 - Phase 4 history and memory scaffold added on `phase/4-history-memory`
+- Phase 5 settings and accessibility scaffold added on `phase/5-settings-accessibility`
 
 ## Branch Strategy
 - `main`
@@ -28,12 +29,15 @@
 - Phase 2 now includes a stateful calculator screen, display panel, reusable key widget, portrait keypad layout, and a starter widget test.
 - Phase 3 now adds angle-mode-aware evaluation state, a scientific keypad for landscape, scientific theme tokens, and a landscape widget test.
 - Phase 4 now adds history entries, memory state, repository abstractions with in-memory implementations, history recall/delete/clear flows, and memory toolbar actions.
-- `where flutter` resolves to `C:\Users\hp\Downloads\flutter\bin\flutter.bat`, but `flutter doctor` and `flutter --version` were still hanging without output during this turn.
+- Phase 5 now adds app settings for theme, text size, decimal precision, haptics, and sound; it also adds settings UI controls and responsive layout fixes.
+- Flutter SDK is installed at `C:\Users\hp\Downloads\flutter\bin\flutter.bat`.
+- `flutter doctor` passes Flutter, Windows, Chrome, connected devices, and network resources. It reports Android license status unknown and Visual Studio missing for Windows desktop builds.
+- Verification now passes with `flutter analyze` and `flutter test`.
 
 ## Next Recommended Actions
-- Commit the history and memory scaffold
-- Once Flutter becomes responsive, run `flutter doctor`, `flutter --version`, and `flutter test`
-- Continue into `phase/5-settings-accessibility`
+- Commit the settings and accessibility scaffold
+- Run `flutter doctor --android-licenses` before Android release work
+- Continue into `phase/6-release-readiness`
 
 ## Commit History
 - `020c07c` `docs: add SmartCalc planning foundation`
@@ -41,3 +45,4 @@
 - `64dc443` `feat: expand SmartCalc phase 1 engine`
 - `f6b6d6c` `feat: add SmartCalc portrait calculator UI`
 - `7193d01` `feat: add SmartCalc scientific landscape mode`
+- `edf6e18` `feat: add SmartCalc history and memory flows`
