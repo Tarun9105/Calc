@@ -7,8 +7,6 @@ import '../presentation/settings_panel.dart';
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({required this.controller, super.key});
 
-  /// Shared [SettingsController] passed from [CalculatorScreen] so that theme
-  /// changes are reflected immediately in the parent.
   final SettingsController controller;
 
   @override
@@ -21,7 +19,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: buildSmartCalcTheme(themeMode: _ctrl.settings.themeMode),
+      data: buildSmartCalcTheme(
+        context,
+        themeMode: _ctrl.settings.themeMode,
+        customOperatorColor: _ctrl.settings.customOperatorColorValue != null
+            ? Color(_ctrl.settings.customOperatorColorValue!)
+            : null,
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Settings'),

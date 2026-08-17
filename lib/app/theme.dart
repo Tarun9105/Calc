@@ -3,11 +3,17 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../features/settings/domain/app_settings.dart';
 
-ThemeData buildSmartCalcTheme({
+ThemeData buildSmartCalcTheme(
+  BuildContext context, {
   CalculatorThemeMode themeMode = CalculatorThemeMode.dark,
   Color? customOperatorColor,
 }) {
-  final isLight = themeMode == CalculatorThemeMode.light;
+  final effectiveMode = themeMode == CalculatorThemeMode.system
+      ? (MediaQuery.platformBrightnessOf(context) == Brightness.light
+          ? CalculatorThemeMode.light
+          : CalculatorThemeMode.dark)
+      : themeMode;
+  final isLight = effectiveMode == CalculatorThemeMode.light;
   final background = isLight ? const Color(0xFFFFFFFF) : const Color(0xFF000000);
   final operator = customOperatorColor ?? const Color(0xFFFF9500);
   final digit = isLight ? const Color(0xFF8E8E93) : const Color(0xFF333333);

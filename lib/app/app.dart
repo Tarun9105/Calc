@@ -11,7 +11,7 @@ class SmartCalcApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'SmartCalc',
-      theme: buildSmartCalcTheme(),
+      theme: buildSmartCalcTheme(context),
       home: const CalculatorScreen(),
     );
   }

@@ -15,11 +15,11 @@ class SettingsController {
   AppSettings get settings => _settings;
 
   void updateThemeMode(CalculatorThemeMode themeMode) {
-    _save(_settings.copyWith(themeMode: themeMode));
+    _saveSettings(_settings.copyWith(themeMode: themeMode));
   }
 
   void updateTextScale(TextScalePreference textScale) {
-    _save(_settings.copyWith(textScale: textScale));
+    _saveSettings(_settings.copyWith(textScale: textScale));
   }
 
   void updateDecimalPrecision(int precision) {

@@ -8,15 +8,15 @@ import '../application/memory_controller.dart';
 class MemoryScreen extends StatefulWidget {
   const MemoryScreen({
     required this.controller,
-    required this.themeMode,
+    required this.settings,
     super.key,
   });
 
   /// Shared [MemoryController] so that memory/history actions are persisted.
   final MemoryController controller;
 
-  /// Theme to use for this screen (kept in sync with calculator's setting).
-  final CalculatorThemeMode themeMode;
+  /// App settings to determine the theme mode and colors.
+  final AppSettings settings;
 
   @override
   State<MemoryScreen> createState() => _MemoryScreenState();
@@ -34,7 +34,13 @@ class _MemoryScreenState extends State<MemoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: buildSmartCalcTheme(themeMode: widget.themeMode),
+      data: buildSmartCalcTheme(
+        context,
+        themeMode: widget.settings.themeMode,
+        customOperatorColor: widget.settings.customOperatorColorValue != null
+            ? Color(widget.settings.customOperatorColorValue!)
+            : null,
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Memory & History'),

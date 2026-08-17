@@ -39,15 +39,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     final orientation = MediaQuery.of(context).orientation;
     final isLandscape = orientation == Orientation.landscape;
 
-    final platformBrightness = MediaQuery.platformBrightnessOf(context);
-    final isSystemLight = platformBrightness == Brightness.light;
-    final effectiveThemeMode = _state.settings.themeMode == CalculatorThemeMode.system
-        ? (isSystemLight ? CalculatorThemeMode.light : CalculatorThemeMode.dark)
-        : _state.settings.themeMode;
-
     return Theme(
       data: buildSmartCalcTheme(
-        themeMode: effectiveThemeMode,
+        context,
+        themeMode: _state.settings.themeMode,
         customOperatorColor: _state.settings.customOperatorColorValue != null
             ? Color(_state.settings.customOperatorColorValue!)
             : null,
@@ -125,7 +120,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  // ── Navigation ──────────────────────────────────────────────────────────────
 
   Future<void> _openSettings() async {
     await Navigator.of(context).push(
@@ -133,7 +127,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         builder: (_) => SettingsScreen(controller: _settingsController),
       ),
     );
-    // Rebuild so the calculator display picks up any setting changes.
+    
     setState(() {
       _controller.updateThemeMode(_settingsController.settings.themeMode);
       _controller.updateTextScale(_settingsController.settings.textScale);
@@ -151,12 +145,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       MaterialPageRoute<dynamic>(
         builder: (_) => MemoryScreen(
           controller: _memoryController,
-          themeMode: effectiveThemeMode,
+          settings: _state.settings,
         ),
       ),
     );
     
-    // Sync state back to calculator state.
     setState(() {
       if (result is String) {
         _controller.pasteExpression(result);
