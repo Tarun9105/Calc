@@ -71,12 +71,19 @@ class CalculatorKeyButton extends StatelessWidget {
                             ),
                           ),
                         ),
-                      Text(
-                        label,
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w400,
-                          color: foregroundColor,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            label,
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor,
+                            ),
+                          ),
                         ),
                       ),
                     ],
