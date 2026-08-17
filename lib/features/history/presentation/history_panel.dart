@@ -51,7 +51,6 @@ class HistoryPanel extends StatelessWidget {
     }
 
     return Container(
-      constraints: const BoxConstraints(maxHeight: 220),
       decoration: BoxDecoration(
         color: colorScheme.onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
@@ -78,33 +77,32 @@ class HistoryPanel extends StatelessWidget {
               ],
             ),
           ),
-          Flexible(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: history.length,
-              itemBuilder: (context, index) {
-                final entry = history[index];
-                return ListTile(
-                  title: Text(
-                    entry.expression,
-                    style: TextStyle(color: muted),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: history.length,
+            itemBuilder: (context, index) {
+              final entry = history[index];
+              return ListTile(
+                title: Text(
+                  entry.expression,
+                  style: TextStyle(color: muted),
+                ),
+                subtitle: Text(
+                  entry.result,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
                   ),
-                  subtitle: Text(
-                    entry.result,
-                    style: TextStyle(
-                      color: colorScheme.onSurface,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  onTap: () => onRecall(index),
-                  trailing: IconButton(
-                    onPressed: () => onDelete(index),
-                    icon: const Icon(Icons.delete_outline),
-                  ),
-                );
-              },
-            ),
+                ),
+                onTap: () => onRecall(index),
+                trailing: IconButton(
+                  onPressed: () => onDelete(index),
+                  icon: const Icon(Icons.delete_outline),
+                ),
+              );
+            },
           ),
         ],
       ),
