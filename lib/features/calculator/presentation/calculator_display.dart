@@ -74,27 +74,35 @@ class CalculatorDisplay extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            expression.isEmpty ? '0' : expression,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: expressionStyle.copyWith(
-              color: mutedText,
-              fontSize: 18 * scale,
+          Semantics(
+            label: 'Expression: ${expression.isEmpty ? '0' : expression}',
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              reverse: true, // auto-scrolls to the end naturally
+              child: Text(
+                expression.isEmpty ? '0' : expression,
+                style: expressionStyle.copyWith(
+                  color: mutedText,
+                  fontSize: 18 * scale,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 12),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerRight,
-            child: Text(
-              display,
-              textAlign: TextAlign.right,
-              style: displayStyle.copyWith(
-                fontSize: 64 * scale,
-                color: errorMessage == null
-                    ? primaryText
-                    : const Color(0xFFFF7B72),
+            child: Semantics(
+              label: 'Result: $display',
+              child: Text(
+                display,
+                textAlign: TextAlign.right,
+                style: displayStyle.copyWith(
+                  fontSize: 64 * scale,
+                  color: errorMessage == null
+                      ? primaryText
+                      : const Color(0xFFFF7B72),
+                ),
               ),
             ),
           ),

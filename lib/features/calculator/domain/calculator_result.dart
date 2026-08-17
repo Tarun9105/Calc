@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'calculator_error.dart';
 
 class CalculatorResult {
@@ -6,11 +7,11 @@ class CalculatorResult {
     this.error,
   });
 
-  const CalculatorResult.success(double value) : this._(value: value);
+  const CalculatorResult.success(Decimal value) : this._(value: value);
 
   const CalculatorResult.failure(CalculatorError error) : this._(error: error);
 
-  final double? value;
+  final Decimal? value;
   final CalculatorError? error;
 
   bool get isSuccess => error == null;

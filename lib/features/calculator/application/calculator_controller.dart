@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+import 'package:intl/intl.dart';
 import '../domain/angle_mode.dart';
 import '../domain/calculator_engine.dart';
 import '../domain/calculator_error.dart';
@@ -6,6 +8,9 @@ import '../../history/domain/history_entry.dart';
 import '../../memory/application/memory_repository.dart';
 import '../../settings/application/settings_repository.dart';
 import '../../settings/domain/app_settings.dart';
+import '../../history/application/hive_history_repository.dart';
+import '../../memory/application/hive_memory_repository.dart';
+import '../../settings/application/hive_settings_repository.dart';
 import 'calculator_state.dart';
 
 class CalculatorController {
@@ -15,9 +20,9 @@ class CalculatorController {
     MemoryRepository? memoryRepository,
     SettingsRepository? settingsRepository,
   })  : _engine = engine,
-        _historyRepository = historyRepository ?? InMemoryHistoryRepository(),
-        _memoryRepository = memoryRepository ?? InMemoryMemoryRepository(),
-        _settingsRepository = settingsRepository ?? InMemorySettingsRepository() {
+        _historyRepository = historyRepository ?? HiveHistoryRepository(),
+        _memoryRepository = memoryRepository ?? HiveMemoryRepository(),
+        _settingsRepository = settingsRepository ?? HiveSettingsRepository() {
     _state = _state.copyWith(
       history: _historyRepository.load(),
       memoryValue: _memoryRepository.load()?.value,
@@ -65,8 +70,9 @@ class CalculatorController {
   }
 
   void applyFunction(String functionName) {
-    final target = _state.expression.isEmpty ? '0' : _state.expression;
-    final nextExpression = '$functionName($target)';
+    final expression = _state.errorMessage == null ? _state.expression : '';
+    final nextExpression = '$expression$functionName(';
+    
     _state = _state.copyWith(
       expression: nextExpression,
       display: _getLiveResult(nextExpression) ?? nextExpression,
@@ -137,7 +143,7 @@ class CalculatorController {
     }
 
     final value = parsed / 100;
-    final display = _formatValue(value);
+    final display = _formatValue(Decimal.parse(value.toString()));
     _state = _state.copyWith(
       expression: display,
       display: display,
@@ -243,7 +249,7 @@ class CalculatorController {
       return;
     }
 
-    final display = _formatValue(memoryValue.value);
+    final display = _formatValue(Decimal.parse(memoryValue.value.toString()));
     _state = _state.copyWith(
       expression: display,
       display: display,
@@ -327,11 +333,16 @@ class CalculatorController {
     return value;
   }
 
-  String _formatValue(double value) {
-    if (value == value.roundToDouble()) {
-      return value.toInt().toString();
+  String _formatValue(Decimal value) {
+    if (value.isInteger) {
+      return NumberFormat.decimalPattern().format(value.toBigInt().toInt());
     }
-    return value.toStringAsPrecision(_state.settings.decimalPrecision);
+    
+    // We want the localized decimal separator, but we have to handle the precision correctly.
+    // decimalPattern() with minimumFractionDigits / maximumFractionDigits can work.
+    final formatter = NumberFormat.decimalPattern()
+      ..maximumFractionDigits = _state.settings.decimalPrecision;
+    return formatter.format(value.toDouble());
   }
 
   double? _parseDisplayValue() {

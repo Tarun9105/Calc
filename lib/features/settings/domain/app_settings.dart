@@ -1,15 +1,28 @@
+import 'package:hive/hive.dart';
+
+part 'app_settings.g.dart';
+
+@HiveType(typeId: 1)
 enum CalculatorThemeMode {
+  @HiveField(0)
   system,
+  @HiveField(1)
   dark,
+  @HiveField(2)
   light,
 }
 
+@HiveType(typeId: 2)
 enum TextScalePreference {
+  @HiveField(0)
   small,
+  @HiveField(1)
   medium,
+  @HiveField(2)
   large,
 }
 
+@HiveType(typeId: 3)
 class AppSettings {
   const AppSettings({
     this.themeMode = CalculatorThemeMode.system,
@@ -21,12 +34,19 @@ class AppSettings {
     this.customButtonBackgroundText,
   });
 
+  @HiveField(0)
   final CalculatorThemeMode themeMode;
+  @HiveField(1)
   final TextScalePreference textScale;
+  @HiveField(2)
   final int decimalPrecision;
+  @HiveField(3)
   final bool hapticsEnabled;
+  @HiveField(4)
   final bool soundEnabled;
+  @HiveField(5)
   final int? customOperatorColorValue;
+  @HiveField(6)
   final String? customButtonBackgroundText;
 
   AppSettings copyWith({

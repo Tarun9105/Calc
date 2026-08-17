@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:decimal/decimal.dart';
 
 import 'angle_mode.dart';
 import 'calculator_error.dart';
@@ -21,7 +22,7 @@ class CalculatorEngine {
     try {
       final parser = _Parser(trimmed, angleMode);
       final value = parser.parse();
-      if (value.isInfinite || value.isNaN) {
+      if (value.toDouble().isInfinite || value.toDouble().isNaN) {
         return const CalculatorResult.failure(CalculatorError.overflow);
       }
       return CalculatorResult.success(value);
@@ -42,7 +43,7 @@ class _Parser {
   final AngleMode angleMode;
   int index = 0;
 
-  double parse() {
+  Decimal parse() {
     final value = _parseExpression();
     _skipWhitespace();
     if (!_isAtEnd) {
@@ -51,7 +52,7 @@ class _Parser {
     return value;
   }
 
-  double _parseExpression() {
+  Decimal _parseExpression() {
     var value = _parseTerm();
     while (true) {
       _skipWhitespace();
@@ -65,7 +66,7 @@ class _Parser {
     }
   }
 
-  double _parseTerm() {
+  Decimal _parseTerm() {
     var value = _parsePower();
     while (true) {
       _skipWhitespace();
@@ -73,38 +74,41 @@ class _Parser {
         value *= _parsePower();
       } else if (_match('/')) {
         final divisor = _parsePower();
-        if (divisor == 0) {
+        if (divisor == Decimal.zero) {
           throw const _CalculatorException(CalculatorError.divideByZero);
         }
-        value /= divisor;
+        value = Decimal.parse((value.toDouble() / divisor.toDouble()).toString());
       } else if (_match('%')) {
         final divisor = _parsePower();
-        if (divisor == 0) {
+        if (divisor == Decimal.zero) {
           throw const _CalculatorException(CalculatorError.divideByZero);
         }
         value %= divisor;
       } else if (_matchIdentifier('mod')) {
         final divisor = _parsePower();
-        if (divisor == 0) {
+        if (divisor == Decimal.zero) {
           throw const _CalculatorException(CalculatorError.divideByZero);
         }
         value %= divisor;
+      } else if (!_isAtEnd && (_peekIsLetter || input[index] == '(' || _isDigit(input[index]) || input[index] == '.')) {
+        value *= _parsePower();
       } else {
         return value;
       }
     }
   }
 
-  double _parsePower() {
+  Decimal _parsePower() {
     var value = _parseUnary();
     _skipWhitespace();
     if (_match('^')) {
-      value = math.pow(value, _parsePower()).toDouble();
+      final power = _parsePower();
+      value = Decimal.parse(math.pow(value.toDouble(), power.toDouble()).toString());
     }
     return value;
   }
 
-  double _parseUnary() {
+  Decimal _parseUnary() {
     _skipWhitespace();
     if (_match('+')) {
       return _parseUnary();
@@ -115,7 +119,7 @@ class _Parser {
     return _parsePrimary();
   }
 
-  double _parsePrimary() {
+  Decimal _parsePrimary() {
     _skipWhitespace();
     if (_match('(')) {
       final value = _parseExpression();
@@ -129,10 +133,10 @@ class _Parser {
     if (_peekIsLetter) {
       final identifier = _parseIdentifier();
       if (identifier == 'pi') {
-        return math.pi;
+        return Decimal.parse(math.pi.toString());
       }
       if (identifier == 'e') {
-        return math.e;
+        return Decimal.parse(math.e.toString());
       }
 
       _skipWhitespace();
@@ -150,10 +154,11 @@ class _Parser {
     return _parseNumber();
   }
 
-  double _parseNumber() {
+  Decimal _parseNumber() {
     _skipWhitespace();
     final start = index;
     var hasDecimal = false;
+    var hasExponent = false;
 
     while (!_isAtEnd) {
       final char = input[index];
@@ -161,9 +166,17 @@ class _Parser {
         index++;
         continue;
       }
-      if (char == '.' && !hasDecimal) {
+      if (char == '.' && !hasDecimal && !hasExponent) {
         hasDecimal = true;
         index++;
+        continue;
+      }
+      if ((char == 'e' || char == 'E') && !hasExponent) {
+        hasExponent = true;
+        index++;
+        if (!_isAtEnd && (input[index] == '+' || input[index] == '-')) {
+          index++;
+        }
         continue;
       }
       break;
@@ -173,60 +186,82 @@ class _Parser {
       throw const _CalculatorException(CalculatorError.invalidExpression);
     }
 
-    return double.parse(input.substring(start, index));
+    final parsedStr = input.substring(start, index);
+    if (parsedStr == '.' || parsedStr.endsWith('e') || parsedStr.endsWith('E') || parsedStr.endsWith('e+') || parsedStr.endsWith('E+') || parsedStr.endsWith('e-') || parsedStr.endsWith('E-')) {
+       throw const _CalculatorException(CalculatorError.invalidExpression);
+    }
+
+    return Decimal.parse(parsedStr);
   }
 
-  double _applyFunction(String identifier, double value) {
+  Decimal _applyFunction(String identifier, Decimal decimalValue) {
+    final value = decimalValue.toDouble();
+    double result;
     switch (identifier) {
       case 'sin':
-        return math.sin(_toRadians(value));
+        result = math.sin(_toRadians(value));
+        break;
       case 'cos':
-        return math.cos(_toRadians(value));
+        result = math.cos(_toRadians(value));
+        break;
       case 'tan':
-        return math.tan(_toRadians(value));
+        result = math.tan(_toRadians(value));
+        break;
       case 'asin':
         if (value < -1 || value > 1) {
           throw const _CalculatorException(CalculatorError.invalidInverseTrig);
         }
-        return _fromRadians(math.asin(value));
+        result = _fromRadians(math.asin(value));
+        break;
       case 'acos':
         if (value < -1 || value > 1) {
           throw const _CalculatorException(CalculatorError.invalidInverseTrig);
         }
-        return _fromRadians(math.acos(value));
+        result = _fromRadians(math.acos(value));
+        break;
       case 'atan':
-        return _fromRadians(math.atan(value));
+        result = _fromRadians(math.atan(value));
+        break;
       case 'sqrt':
         if (value < 0) {
           throw const _CalculatorException(CalculatorError.negativeSqrt);
         }
-        return math.sqrt(value);
+        result = math.sqrt(value);
+        break;
       case 'ln':
         if (value <= 0) {
           throw const _CalculatorException(CalculatorError.negativeLog);
         }
-        return math.log(value);
+        result = math.log(value);
+        break;
       case 'log':
         if (value <= 0) {
           throw const _CalculatorException(CalculatorError.negativeLog);
         }
-        return math.log(value) / math.ln10;
+        result = math.log(value) / math.ln10;
+        break;
       case 'abs':
-        return value.abs();
+        result = value.abs();
+        break;
       case 'inv':
         if (value == 0) {
           throw const _CalculatorException(CalculatorError.divideByZero);
         }
-        return 1 / value;
+        result = 1 / value;
+        break;
       case 'square':
-        return value * value;
+        result = value * value;
+        break;
       case 'cube':
-        return value * value * value;
+        result = value * value * value;
+        break;
       case 'factorial':
-        return _factorial(value);
+        result = _factorial(value);
+        break;
       default:
         throw const _CalculatorException(CalculatorError.invalidExpression);
     }
+    return Decimal.parse(result.toString());
   }
 
   double _factorial(double value) {
