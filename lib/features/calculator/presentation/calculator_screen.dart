@@ -82,14 +82,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               Expanded(
                 child: Column(
                   children: [
-                    CalculatorDisplay(
+                    Expanded(
+                      flex: 400,
+                      child: CalculatorDisplay(
                       expression: _state.expression,
                       display: _state.display,
                       angleMode: _state.angleMode,
                       settings: _state.settings,
                       errorMessage: _state.errorMessage,
+                      onAngleModeTapped: _handleCycleAngleMode,
                     ),
-                    Padding(
+                  ),
+                  Padding(
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
                       child: MemoryToolbar(
                         memoryValue: _state.memoryValue,
@@ -119,32 +123,44 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                           ),
                         ),
                       ),
-                    AnimatedSize(
+                    TweenAnimationBuilder<double>(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOutCubic,
-                      child: (!isLandscape && _isScientificExpanded)
-                          ? Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: ScientificKeypad(
-                                angleModeLabel: _state.angleMode.shortLabel,
-                                onFunction: _handleFunction,
-                                onConstant: _handleInput,
-                                onPower: _handlePower,
-                                onCycleAngleMode: _handleCycleAngleMode,
-                              ),
-                            )
-                          : const SizedBox.shrink(),
+                      tween: Tween<double>(
+                        begin: 0.0,
+                        end: (!isLandscape && _isScientificExpanded) ? 400.0 : 0.0,
+                      ),
+                      builder: (context, flex, child) {
+                        if (flex == 0.0) return const SizedBox.shrink();
+                        return Expanded(
+                          flex: flex.toInt(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: child!,
+                          ),
+                        );
+                      },
+                      child: ScientificKeypad(
+                        angleModeLabel: _state.angleMode.shortLabel,
+                        onFunction: _handleFunction,
+                        onConstant: _handleInput,
+                        onPower: _handlePower,
+                        onCycleAngleMode: _handleCycleAngleMode,
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-                      child: CalculatorKeypad(
-                        onInput: _handleInput,
-                        onEvaluate: _handleEvaluate,
-                        onBackspace: _handleBackspace,
-                        onClear: _handleClear,
-                        onPercent: _handlePercent,
-                        onToggleSign: _handleToggleSign,
-                        customButtonBackgroundText: _state.settings.customButtonBackgroundText,
+                    Expanded(
+                      flex: 500,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                        child: CalculatorKeypad(
+                          onInput: _handleInput,
+                          onEvaluate: _handleEvaluate,
+                          onBackspace: _handleBackspace,
+                          onClear: _handleClear,
+                          onPercent: _handlePercent,
+                          onToggleSign: _handleToggleSign,
+                          customButtonBackgroundText: _state.settings.customButtonBackgroundText,
+                        ),
                       ),
                     ),
                   ],

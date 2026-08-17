@@ -10,6 +10,7 @@ class CalculatorDisplay extends StatelessWidget {
     required this.angleMode,
     required this.settings,
     required this.errorMessage,
+    this.onAngleModeTapped,
     super.key,
   });
 
@@ -18,6 +19,7 @@ class CalculatorDisplay extends StatelessWidget {
   final AngleMode angleMode;
   final AppSettings settings;
   final String? errorMessage;
+  final VoidCallback? onAngleModeTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -46,19 +48,26 @@ class CalculatorDisplay extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 14),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: badgeColor,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: onAngleModeTapped,
                   borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  angleMode.shortLabel,
-                  style: expressionStyle.copyWith(
-                    color: mutedText,
-                    fontSize: 13 * scale,
-                    fontWeight: FontWeight.w600,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: badgeColor,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      angleMode.shortLabel,
+                      style: expressionStyle.copyWith(
+                        color: mutedText,
+                        fontSize: 13 * scale,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -33,7 +33,7 @@ class CalculatorKeypad extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildRow([
+        Expanded(child: _buildRow([
           _key(
             label: '⌫', // Standard backspace symbol, or we can use 'C'
             semanticLabel: 'delete',
@@ -63,26 +63,26 @@ class CalculatorKeypad extends StatelessWidget {
             foregroundColor: Colors.white,
             onPressed: () => onInput('/'),
           ),
-        ]),
-        _buildRow([
+        ])),
+        Expanded(child: _buildRow([
           _digit(colors, '7', context),
           _digit(colors, '8', context),
           _digit(colors, '9', context),
           _operator(colors, '×', 'multiply', '*'),
-        ]),
-        _buildRow([
+        ])),
+        Expanded(child: _buildRow([
           _digit(colors, '4', context),
           _digit(colors, '5', context),
           _digit(colors, '6', context),
           _operator(colors, '−', 'subtract', '-'),
-        ]),
-        _buildRow([
+        ])),
+        Expanded(child: _buildRow([
           _digit(colors, '1', context),
           _digit(colors, '2', context),
           _digit(colors, '3', context),
           _operator(colors, '+', 'add', '+'),
-        ]),
-        _buildRow([
+        ])),
+        Expanded(child: _buildRow([
           _key(
             label: '0',
             semanticLabel: '0',
@@ -105,7 +105,7 @@ class CalculatorKeypad extends StatelessWidget {
             foregroundColor: Colors.white,
             onPressed: onEvaluate,
           ),
-        ]),
+        ])),
       ],
     );
   }
