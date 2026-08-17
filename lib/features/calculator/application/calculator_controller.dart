@@ -49,7 +49,7 @@ class CalculatorController {
       final nextExpression = expression.substring(0, expression.length - 1) + value;
       _state = _state.copyWith(
         expression: nextExpression,
-        display: nextExpression,
+        display: _getLiveResult(nextExpression) ?? nextExpression,
         clearError: true,
       );
       return;
@@ -59,7 +59,7 @@ class CalculatorController {
     final nextExpression = '$expression$nextValue';
     _state = _state.copyWith(
       expression: nextExpression,
-      display: nextExpression,
+      display: _getLiveResult(nextExpression) ?? nextExpression,
       clearError: true,
     );
   }
@@ -69,7 +69,7 @@ class CalculatorController {
     final nextExpression = '$functionName($target)';
     _state = _state.copyWith(
       expression: nextExpression,
-      display: nextExpression,
+      display: _getLiveResult(nextExpression) ?? nextExpression,
       clearError: true,
     );
   }
@@ -77,7 +77,7 @@ class CalculatorController {
   void pasteExpression(String value) {
     _state = _state.copyWith(
       expression: value,
-      display: value,
+      display: _getLiveResult(value) ?? value,
       clearError: true,
     );
   }
@@ -115,7 +115,7 @@ class CalculatorController {
 
     _state = _state.copyWith(
       expression: nextExpression,
-      display: nextExpression,
+      display: _getLiveResult(nextExpression) ?? nextExpression,
       clearError: true,
     );
   }
@@ -130,7 +130,7 @@ class CalculatorController {
     if (parsed == null) {
       _state = _state.copyWith(
         expression: '$expression/100',
-        display: '$expression/100',
+        display: _getLiveResult('$expression/100') ?? '$expression/100',
         clearError: true,
       );
       return;
@@ -162,7 +162,7 @@ class CalculatorController {
     final nextExpression = _state.expression.substring(0, _state.expression.length - 1);
     _state = _state.copyWith(
       expression: nextExpression,
-      display: nextExpression.isEmpty ? '0' : nextExpression,
+      display: nextExpression.isEmpty ? '0' : (_getLiveResult(nextExpression) ?? nextExpression),
       clearError: true,
     );
   }
@@ -341,6 +341,24 @@ class CalculatorController {
     }
 
     return double.tryParse(_state.expression);
+  }
+
+  String? _getLiveResult(String expr) {
+    if (expr.isEmpty) return null;
+    
+    // Strip trailing operators and periods for a valid partial evaluation
+    String evalStr = expr;
+    while (evalStr.isNotEmpty && (_isOperator(evalStr[evalStr.length - 1]) || evalStr[evalStr.length - 1] == '.' || evalStr[evalStr.length - 1] == '(')) {
+      evalStr = evalStr.substring(0, evalStr.length - 1);
+    }
+    
+    if (evalStr.isEmpty) return null;
+
+    final result = _engine.evaluate(evalStr, angleMode: _state.angleMode);
+    if (result.isSuccess) {
+      return _formatValue(result.value!);
+    }
+    return null;
   }
 
   void _saveSettings(AppSettings settings) {

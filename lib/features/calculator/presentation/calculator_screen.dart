@@ -21,6 +21,7 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
+  bool _isScientificExpanded = false;
   final CalculatorController _controller = CalculatorController();
 
   late final SettingsController _settingsController = SettingsController(
@@ -71,6 +72,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             children: [
               if (isLandscape)
                 ScientificKeypad(
+                  width: 280,
                   angleModeLabel: _state.angleMode.shortLabel,
                   onFunction: _handleFunction,
                   onConstant: _handleInput,
@@ -97,6 +99,41 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                         onMemorySubtract: () => setState(() => _controller.memorySubtract()),
                         onMemoryStore: () => setState(() => _controller.memoryStore()),
                       ),
+                    ),
+                    if (!isLandscape)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Center(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: () => setState(() => _isScientificExpanded = !_isScientificExpanded),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                              child: Icon(
+                                _isScientificExpanded 
+                                    ? Icons.keyboard_arrow_down_rounded 
+                                    : Icons.keyboard_arrow_up_rounded,
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOutCubic,
+                      child: (!isLandscape && _isScientificExpanded)
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: ScientificKeypad(
+                                angleModeLabel: _state.angleMode.shortLabel,
+                                onFunction: _handleFunction,
+                                onConstant: _handleInput,
+                                onPower: _handlePower,
+                                onCycleAngleMode: _handleCycleAngleMode,
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),

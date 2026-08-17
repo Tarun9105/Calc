@@ -13,6 +13,7 @@ class ScientificKeypad extends StatelessWidget {
     required this.onConstant,
     required this.onPower,
     required this.onCycleAngleMode,
+    this.width,
     super.key,
   });
 
@@ -21,13 +22,14 @@ class ScientificKeypad extends StatelessWidget {
   final ScientificFunctionCallback onConstant;
   final ScientificActionCallback onPower;
   final ScientificActionCallback onCycleAngleMode;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<SmartCalcColors>()!;
 
     return Container(
-      width: 280,
+      width: width,
       padding: const EdgeInsets.fromLTRB(12, 12, 0, 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
