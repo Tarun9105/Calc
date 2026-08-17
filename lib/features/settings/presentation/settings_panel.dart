@@ -10,6 +10,8 @@ class SettingsPanel extends StatelessWidget {
     required this.onPrecisionChanged,
     required this.onHapticsChanged,
     required this.onSoundChanged,
+    required this.onCustomOperatorColorChanged,
+    required this.onCustomButtonBackgroundTextChanged,
     super.key,
   });
 
@@ -19,6 +21,8 @@ class SettingsPanel extends StatelessWidget {
   final ValueChanged<int> onPrecisionChanged;
   final ValueChanged<bool> onHapticsChanged;
   final ValueChanged<bool> onSoundChanged;
+  final ValueChanged<int?> onCustomOperatorColorChanged;
+  final ValueChanged<String?> onCustomButtonBackgroundTextChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +77,10 @@ class SettingsPanel extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 20),
+          _colorSelector(context),
+          const SizedBox(height: 20),
+          _backgroundTextInput(context),
         ],
       ),
     );
@@ -163,6 +171,84 @@ class SettingsPanel extends StatelessWidget {
         Switch(
           value: value,
           onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+
+  Widget _colorSelector(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final colors = [
+      null, // default orange
+      Colors.blue.value,
+      Colors.green.value,
+      Colors.purple.value,
+      Colors.pink.value,
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Operator Color',
+          style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)),
+        ),
+        const SizedBox(height: 8),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: colors.map((cValue) {
+              final color = cValue == null ? const Color(0xFFFF9500) : Color(cValue);
+              final isSelected = settings.customOperatorColorValue == cValue;
+              return GestureDetector(
+                onTap: () => onCustomOperatorColorChanged(cValue),
+                child: Container(
+                  margin: const EdgeInsets.only(right: 12),
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected ? colorScheme.onSurface : Colors.transparent,
+                      width: 2,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _backgroundTextInput(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Button Watermark Text',
+          style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: TextEditingController(text: settings.customButtonBackgroundText)..selection = TextSelection.collapsed(offset: settings.customButtonBackgroundText?.length ?? 0),
+          onChanged: (v) => onCustomButtonBackgroundTextChanged(v.isEmpty ? null : v),
+          style: TextStyle(color: colorScheme.onSurface),
+          decoration: InputDecoration(
+            hintText: 'Enter text here',
+            hintStyle: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.3)),
+            filled: true,
+            fillColor: colorScheme.onSurface.withValues(alpha: 0.05),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
         ),
       ],
     );

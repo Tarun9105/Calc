@@ -4,7 +4,6 @@ import '../../../app/theme.dart';
 import '../../../features/settings/domain/app_settings.dart';
 import '../../history/presentation/history_panel.dart';
 import '../application/memory_controller.dart';
-import 'memory_toolbar.dart';
 
 class MemoryScreen extends StatefulWidget {
   const MemoryScreen({

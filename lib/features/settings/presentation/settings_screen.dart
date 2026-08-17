@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../app/theme.dart';
 import '../application/settings_controller.dart';
-import '../domain/app_settings.dart';
 import '../presentation/settings_panel.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -45,6 +44,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   setState(() => _ctrl.updateHapticsEnabled(v)),
               onSoundChanged: (v) =>
                   setState(() => _ctrl.updateSoundEnabled(v)),
+              onCustomOperatorColorChanged: (v) =>
+                  setState(() => _ctrl.updateCustomOperatorColor(v)),
+              onCustomButtonBackgroundTextChanged: (v) =>
+                  setState(() => _ctrl.updateCustomButtonBackgroundText(v)),
             ),
           ),
         ),

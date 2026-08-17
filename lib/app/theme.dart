@@ -5,10 +5,11 @@ import '../features/settings/domain/app_settings.dart';
 
 ThemeData buildSmartCalcTheme({
   CalculatorThemeMode themeMode = CalculatorThemeMode.dark,
+  Color? customOperatorColor,
 }) {
   final isLight = themeMode == CalculatorThemeMode.light;
   final background = isLight ? const Color(0xFFFFFFFF) : const Color(0xFF000000);
-  const operator = Color(0xFFFF9500);
+  final operator = customOperatorColor ?? const Color(0xFFFF9500);
   final digit = isLight ? const Color(0xFF8E8E93) : const Color(0xFF333333);
   final function = isLight ? const Color(0xFFD1D1D6) : const Color(0xFFA5A5A5);
   final scientific = isLight ? const Color(0xFFE5E5EA) : const Color(0xFF1C1C1C);

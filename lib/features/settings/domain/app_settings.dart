@@ -1,4 +1,5 @@
 enum CalculatorThemeMode {
+  system,
   dark,
   light,
 }
@@ -11,11 +12,13 @@ enum TextScalePreference {
 
 class AppSettings {
   const AppSettings({
-    this.themeMode = CalculatorThemeMode.dark,
+    this.themeMode = CalculatorThemeMode.system,
     this.textScale = TextScalePreference.medium,
     this.decimalPrecision = 10,
     this.hapticsEnabled = true,
     this.soundEnabled = false,
+    this.customOperatorColorValue,
+    this.customButtonBackgroundText,
   });
 
   final CalculatorThemeMode themeMode;
@@ -23,6 +26,8 @@ class AppSettings {
   final int decimalPrecision;
   final bool hapticsEnabled;
   final bool soundEnabled;
+  final int? customOperatorColorValue;
+  final String? customButtonBackgroundText;
 
   AppSettings copyWith({
     CalculatorThemeMode? themeMode,
@@ -30,6 +35,8 @@ class AppSettings {
     int? decimalPrecision,
     bool? hapticsEnabled,
     bool? soundEnabled,
+    int? customOperatorColorValue,
+    String? customButtonBackgroundText,
   }) {
     return AppSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -37,6 +44,8 @@ class AppSettings {
       decimalPrecision: decimalPrecision ?? this.decimalPrecision,
       hapticsEnabled: hapticsEnabled ?? this.hapticsEnabled,
       soundEnabled: soundEnabled ?? this.soundEnabled,
+      customOperatorColorValue: customOperatorColorValue ?? this.customOperatorColorValue,
+      customButtonBackgroundText: customButtonBackgroundText ?? this.customButtonBackgroundText,
     );
   }
 }
@@ -68,6 +77,8 @@ extension TextScalePreferenceValue on TextScalePreference {
 extension CalculatorThemeModeLabel on CalculatorThemeMode {
   String get label {
     switch (this) {
+      case CalculatorThemeMode.system:
+        return 'System';
       case CalculatorThemeMode.dark:
         return 'Dark';
       case CalculatorThemeMode.light:

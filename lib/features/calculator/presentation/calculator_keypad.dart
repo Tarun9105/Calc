@@ -14,6 +14,7 @@ class CalculatorKeypad extends StatelessWidget {
     required this.onClear,
     required this.onPercent,
     required this.onToggleSign,
+    this.customButtonBackgroundText,
     super.key,
   });
 
@@ -23,6 +24,7 @@ class CalculatorKeypad extends StatelessWidget {
   final VoidKeyCallback onClear;
   final VoidKeyCallback onPercent;
   final VoidKeyCallback onToggleSign;
+  final String? customButtonBackgroundText;
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +156,7 @@ class CalculatorKeypad extends StatelessWidget {
       onPressed: onPressed,
       onLongPress: onLongPress,
       flex: flex,
+      customBackgroundText: customButtonBackgroundText,
     );
   }
 }

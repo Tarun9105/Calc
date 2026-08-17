@@ -8,7 +8,6 @@ import '../../memory/application/memory_controller.dart';
 import '../../memory/presentation/memory_screen.dart';
 import '../../memory/presentation/memory_toolbar.dart';
 import '../../settings/application/settings_controller.dart';
-import '../../settings/domain/app_settings.dart';
 import '../../settings/presentation/settings_screen.dart';
 import 'calculator_display.dart';
 import 'calculator_keypad.dart';
@@ -40,19 +39,30 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     final orientation = MediaQuery.of(context).orientation;
     final isLandscape = orientation == Orientation.landscape;
 
+    final platformBrightness = MediaQuery.platformBrightnessOf(context);
+    final isSystemLight = platformBrightness == Brightness.light;
+    final effectiveThemeMode = _state.settings.themeMode == CalculatorThemeMode.system
+        ? (isSystemLight ? CalculatorThemeMode.light : CalculatorThemeMode.dark)
+        : _state.settings.themeMode;
+
     return Theme(
-      data: buildSmartCalcTheme(themeMode: _state.settings.themeMode),
+      data: buildSmartCalcTheme(
+        themeMode: effectiveThemeMode,
+        customOperatorColor: _state.settings.customOperatorColorValue != null
+            ? Color(_state.settings.customOperatorColorValue!)
+            : null,
+      ),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          // Settings icon — top left
+         
           leading: IconButton(
             tooltip: 'Settings',
             icon: const Icon(Icons.tune_rounded),
             onPressed: _openSettings,
           ),
-          // Memory & History icon — top right
+          
           actions: [
             IconButton(
               tooltip: 'Memory & History',
@@ -102,6 +112,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                         onClear: _handleClear,
                         onPercent: _handlePercent,
                         onToggleSign: _handleToggleSign,
+                        customButtonBackgroundText: _state.settings.customButtonBackgroundText,
                       ),
                     ),
                   ],
@@ -140,7 +151,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       MaterialPageRoute<dynamic>(
         builder: (_) => MemoryScreen(
           controller: _memoryController,
-          themeMode: _state.settings.themeMode,
+          themeMode: effectiveThemeMode,
         ),
       ),
     );

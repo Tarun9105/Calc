@@ -23,18 +23,26 @@ class SettingsController {
   }
 
   void updateDecimalPrecision(int precision) {
-    _save(_settings.copyWith(decimalPrecision: precision.clamp(2, 10)));
+    _saveSettings(_settings.copyWith(decimalPrecision: precision.clamp(2, 10)));
   }
 
   void updateHapticsEnabled(bool isEnabled) {
-    _save(_settings.copyWith(hapticsEnabled: isEnabled));
+    _saveSettings(_settings.copyWith(hapticsEnabled: isEnabled));
   }
 
   void updateSoundEnabled(bool isEnabled) {
-    _save(_settings.copyWith(soundEnabled: isEnabled));
+    _saveSettings(_settings.copyWith(soundEnabled: isEnabled));
   }
 
-  void _save(AppSettings settings) {
+  void updateCustomOperatorColor(int? colorValue) {
+    _saveSettings(_settings.copyWith(customOperatorColorValue: colorValue));
+  }
+
+  void updateCustomButtonBackgroundText(String? text) {
+    _saveSettings(_settings.copyWith(customButtonBackgroundText: text));
+  }
+
+  void _saveSettings(AppSettings settings) {
     _settings = _settingsRepository.save(settings);
   }
 }

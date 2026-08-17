@@ -8,6 +8,7 @@ class CalculatorKeyButton extends StatelessWidget {
     required this.foregroundColor,
     required this.onPressed,
     this.onLongPress,
+    this.customBackgroundText,
     this.flex = 1,
     super.key,
   });
@@ -18,6 +19,7 @@ class CalculatorKeyButton extends StatelessWidget {
   final Color foregroundColor;
   final VoidCallback onPressed;
   final VoidCallback? onLongPress;
+  final String? customBackgroundText;
   final int flex;
 
   @override
@@ -47,17 +49,32 @@ class CalculatorKeyButton extends StatelessWidget {
                 child: Align(
                   alignment: flex == 2 ? Alignment.centerLeft : Alignment.center,
                   child: Padding(
-                    padding: EdgeInsets.only(left: flex == 2 ? 24 : 0),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        label,
-                        style: TextStyle(
-                          color: foregroundColor,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w400,
+                    padding: flex == 2 ? const EdgeInsets.only(left: 32) : EdgeInsets.zero,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (customBackgroundText != null && customBackgroundText!.isNotEmpty)
+                          FittedBox(
+                            child: Text(
+                              customBackgroundText!,
+                              style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).brightness == Brightness.light
+                                    ? Colors.blue.withValues(alpha: 0.15)
+                                    : Colors.grey.withValues(alpha: 0.15),
+                              ),
+                            ),
+                          ),
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w400,
+                            color: foregroundColor,
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),
