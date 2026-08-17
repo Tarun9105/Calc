@@ -30,7 +30,7 @@ class CalculatorKeyButton extends StatelessWidget {
         button: true,
         label: semanticLabel,
         child: SizedBox(
-          height: 58,
+          height: 52,
           child: Padding(
             padding: const EdgeInsets.all(4),
             child: Material(
