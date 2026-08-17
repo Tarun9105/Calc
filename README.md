@@ -1,6 +1,10 @@
 # smartcalc
 
-A new Flutter project.
+A scientific calculator built with Flutter.
+
+## Supported Platforms
+- Android
+- Windows
 
 ## Getting Started
 

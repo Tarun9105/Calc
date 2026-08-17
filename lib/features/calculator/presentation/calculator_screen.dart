@@ -4,10 +4,11 @@ import '../../../app/theme.dart';
 import '../application/calculator_controller.dart';
 import '../application/calculator_state.dart';
 import '../domain/angle_mode.dart';
-import '../../history/presentation/history_panel.dart';
-import '../../memory/presentation/memory_toolbar.dart';
+import '../../memory/application/memory_controller.dart';
+import '../../memory/presentation/memory_screen.dart';
+import '../../settings/application/settings_controller.dart';
 import '../../settings/domain/app_settings.dart';
-import '../../settings/presentation/settings_panel.dart';
+import '../../settings/presentation/settings_screen.dart';
 import 'calculator_display.dart';
 import 'calculator_keypad.dart';
 import 'scientific_keypad.dart';
@@ -22,6 +23,15 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
   final CalculatorController _controller = CalculatorController();
 
+  late final SettingsController _settingsController = SettingsController(
+    settingsRepository: _controller.settingsRepository,
+  );
+
+  late final MemoryController _memoryController = MemoryController(
+    memoryRepository: _controller.memoryRepository,
+    historyRepository: _controller.historyRepository,
+  );
+
   CalculatorState get _state => _controller.state;
 
   @override
@@ -32,6 +42,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Theme(
       data: buildSmartCalcTheme(themeMode: _state.settings.themeMode),
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          // Settings icon — top left
+          leading: IconButton(
+            tooltip: 'Settings',
+            icon: const Icon(Icons.tune_rounded),
+            onPressed: _openSettings,
+          ),
+          // Memory & History icon — top right
+          actions: [
+            IconButton(
+              tooltip: 'Memory & History',
+              icon: const Icon(Icons.history_rounded),
+              onPressed: _openMemory,
+            ),
+          ],
+        ),
         body: SafeArea(
           child: Row(
             children: [
@@ -53,39 +81,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       settings: _state.settings,
                       errorMessage: _state.errorMessage,
                     ),
-                    if (!isLandscape) ...[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                        child: SettingsPanel(
-                          settings: _state.settings,
-                          onThemeChanged: _handleThemeChanged,
-                          onTextScaleChanged: _handleTextScaleChanged,
-                          onPrecisionChanged: _handlePrecisionChanged,
-                          onHapticsChanged: _handleHapticsChanged,
-                          onSoundChanged: _handleSoundChanged,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                        child: MemoryToolbar(
-                          memoryValue: _state.memoryValue,
-                          onMemoryClear: _handleMemoryClear,
-                          onMemoryRecall: _handleMemoryRecall,
-                          onMemoryAdd: _handleMemoryAdd,
-                          onMemorySubtract: _handleMemorySubtract,
-                          onMemoryStore: _handleMemoryStore,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                        child: HistoryPanel(
-                          history: _state.history,
-                          onRecall: _handleRecallHistory,
-                          onDelete: _handleDeleteHistory,
-                          onClearAll: _handleClearHistory,
-                        ),
-                      ),
-                    ],
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                      child: const SizedBox.shrink(), // memory toolbar moved to MemoryScreen
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
                       child: CalculatorKeypad(
@@ -105,6 +104,48 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       ),
     );
   }
+
+  // ── Navigation ──────────────────────────────────────────────────────────────
+
+  Future<void> _openSettings() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SettingsScreen(controller: _settingsController),
+      ),
+    );
+    // Rebuild so the calculator display picks up any setting changes.
+    setState(() {
+      _controller.updateThemeMode(_settingsController.settings.themeMode);
+      _controller.updateTextScale(_settingsController.settings.textScale);
+      _controller.updateDecimalPrecision(
+          _settingsController.settings.decimalPrecision);
+      _controller
+          .updateHapticsEnabled(_settingsController.settings.hapticsEnabled);
+      _controller
+          .updateSoundEnabled(_settingsController.settings.soundEnabled);
+    });
+  }
+
+  Future<void> _openMemory() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => MemoryScreen(
+          controller: _memoryController,
+          themeMode: _state.settings.themeMode,
+        ),
+      ),
+    );
+    // Sync memory value back to calculator state.
+    setState(() {
+      if (_memoryController.memoryValue != null) {
+        _controller.memoryStore();
+      } else {
+        _controller.memoryClear();
+      }
+    });
+  }
+
+  // ── Handlers ────────────────────────────────────────────────────────────────
 
   void _handleInput(String value) {
     setState(() {
@@ -151,84 +192,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void _handleCycleAngleMode() {
     setState(() {
       _controller.cycleAngleMode();
-    });
-  }
-
-  void _handleRecallHistory(int index) {
-    setState(() {
-      _controller.recallHistory(index);
-    });
-  }
-
-  void _handleDeleteHistory(int index) {
-    setState(() {
-      _controller.deleteHistoryEntry(index);
-    });
-  }
-
-  void _handleClearHistory() {
-    setState(() {
-      _controller.clearHistory();
-    });
-  }
-
-  void _handleMemoryStore() {
-    setState(() {
-      _controller.memoryStore();
-    });
-  }
-
-  void _handleMemoryRecall() {
-    setState(() {
-      _controller.memoryRecall();
-    });
-  }
-
-  void _handleMemoryClear() {
-    setState(() {
-      _controller.memoryClear();
-    });
-  }
-
-  void _handleMemoryAdd() {
-    setState(() {
-      _controller.memoryAdd();
-    });
-  }
-
-  void _handleMemorySubtract() {
-    setState(() {
-      _controller.memorySubtract();
-    });
-  }
-
-  void _handleThemeChanged(CalculatorThemeMode themeMode) {
-    setState(() {
-      _controller.updateThemeMode(themeMode);
-    });
-  }
-
-  void _handleTextScaleChanged(TextScalePreference textScale) {
-    setState(() {
-      _controller.updateTextScale(textScale);
-    });
-  }
-
-  void _handlePrecisionChanged(int precision) {
-    setState(() {
-      _controller.updateDecimalPrecision(precision);
-    });
-  }
-
-  void _handleHapticsChanged(bool isEnabled) {
-    setState(() {
-      _controller.updateHapticsEnabled(isEnabled);
-    });
-  }
-
-  void _handleSoundChanged(bool isEnabled) {
-    setState(() {
-      _controller.updateSoundEnabled(isEnabled);
     });
   }
 }

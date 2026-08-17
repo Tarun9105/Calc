@@ -33,6 +33,11 @@ class CalculatorController {
 
   CalculatorState get state => _state;
 
+  /// Expose repositories so sibling feature-controllers can share the same store.
+  HistoryRepository get historyRepository => _historyRepository;
+  MemoryRepository get memoryRepository => _memoryRepository;
+  SettingsRepository get settingsRepository => _settingsRepository;
+
   void append(String value) {
     final nextValue = _state.errorMessage == null ? value : _normalizeReplacement(value);
     final nextExpression = '${_state.expression}$value';
