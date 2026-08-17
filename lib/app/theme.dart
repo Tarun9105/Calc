@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../features/settings/domain/app_settings.dart';
 
@@ -6,11 +7,11 @@ ThemeData buildSmartCalcTheme({
   CalculatorThemeMode themeMode = CalculatorThemeMode.dark,
 }) {
   final isLight = themeMode == CalculatorThemeMode.light;
-  final background = isLight ? const Color(0xFFF2F2F7) : const Color(0xFF000000);
+  final background = isLight ? const Color(0xFFFFFFFF) : const Color(0xFF000000);
   const operator = Color(0xFFFF9500);
-  final digit = isLight ? const Color(0xFFE0E0E6) : const Color(0xFF333333);
-  const function = Color(0xFFA5A5A5);
-  final scientific = isLight ? const Color(0xFFD1D1D6) : const Color(0xFF1C1C1C);
+  final digit = isLight ? const Color(0xFF8E8E93) : const Color(0xFF333333);
+  final function = isLight ? const Color(0xFFD1D1D6) : const Color(0xFFA5A5A5);
+  final scientific = isLight ? const Color(0xFFE5E5EA) : const Color(0xFF1C1C1C);
   final textOnSurface = isLight ? Colors.black : Colors.white;
 
   return ThemeData(
@@ -23,15 +24,17 @@ ThemeData buildSmartCalcTheme({
       primary: operator,
       secondary: digit,
     ),
-    textTheme: TextTheme(
-      displayLarge: TextStyle(
-        fontSize: 64,
-        fontWeight: FontWeight.w300,
-        color: textOnSurface,
-      ),
-      bodyLarge: TextStyle(
-        fontSize: 18,
-        color: isLight ? Colors.black87 : Colors.white70,
+    textTheme: GoogleFonts.interTextTheme(
+      TextTheme(
+        displayLarge: TextStyle(
+          fontSize: 64,
+          fontWeight: FontWeight.w300,
+          color: textOnSurface,
+        ),
+        bodyLarge: TextStyle(
+          fontSize: 18,
+          color: isLight ? Colors.black87 : Colors.white70,
+        ),
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[

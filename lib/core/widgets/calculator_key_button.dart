@@ -7,6 +7,7 @@ class CalculatorKeyButton extends StatelessWidget {
     required this.backgroundColor,
     required this.foregroundColor,
     required this.onPressed,
+    this.onLongPress,
     this.flex = 1,
     super.key,
   });
@@ -16,6 +17,7 @@ class CalculatorKeyButton extends StatelessWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final VoidCallback onPressed;
+  final VoidCallback? onLongPress;
   final int flex;
 
   @override
@@ -33,10 +35,15 @@ class CalculatorKeyButton extends StatelessWidget {
               color: backgroundColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(flex == 2 ? 34 : 999),
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                  width: 1,
+                ),
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(flex == 2 ? 34 : 999),
                 onTap: onPressed,
+                onLongPress: onLongPress,
                 child: Align(
                   alignment: flex == 2 ? Alignment.centerLeft : Alignment.center,
                   child: Padding(

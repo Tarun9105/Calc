@@ -48,7 +48,7 @@ class SettingsPanel extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              _themeMenu(),
+              _themeMenu(context),
             ],
           ),
           const SizedBox(height: 10),
@@ -58,13 +58,15 @@ class SettingsPanel extends StatelessWidget {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               _textScaleControl(),
-              _precisionControl(),
+              _precisionControl(context),
               _switchControl(
+                context: context,
                 label: 'Haptics',
                 value: settings.hapticsEnabled,
                 onChanged: onHapticsChanged,
               ),
               _switchControl(
+                context: context,
                 label: 'Sound',
                 value: settings.soundEnabled,
                 onChanged: onSoundChanged,
@@ -76,12 +78,15 @@ class SettingsPanel extends StatelessWidget {
     );
   }
 
-  Widget _themeMenu() {
+  Widget _themeMenu(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return DropdownButton<CalculatorThemeMode>(
       value: settings.themeMode,
-      dropdownColor: const Color(0xFF1C1C1C),
+      dropdownColor: isDark ? const Color(0xFF1C1C1C) : const Color(0xFFF2F2F7),
       underline: const SizedBox.shrink(),
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: colorScheme.onSurface),
       items: CalculatorThemeMode.values
           .map(
             (mode) => DropdownMenuItem(
@@ -113,13 +118,15 @@ class SettingsPanel extends StatelessWidget {
     );
   }
 
-  Widget _precisionControl() {
+  Widget _precisionControl(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           'Precision',
-          style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+          style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)),
         ),
         const SizedBox(width: 8),
         SizedBox(
@@ -135,21 +142,24 @@ class SettingsPanel extends StatelessWidget {
         ),
         Text(
           settings.decimalPrecision.toString(),
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: colorScheme.onSurface),
         ),
       ],
     );
   }
 
   Widget _switchControl({
+    required BuildContext context,
     required String label,
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70)),
+        Text(label, style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7))),
         Switch(
           value: value,
           onChanged: onChanged,

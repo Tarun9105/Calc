@@ -10,6 +10,7 @@ class CalculatorKeypad extends StatelessWidget {
   const CalculatorKeypad({
     required this.onInput,
     required this.onEvaluate,
+    required this.onBackspace,
     required this.onClear,
     required this.onPercent,
     required this.onToggleSign,
@@ -18,6 +19,7 @@ class CalculatorKeypad extends StatelessWidget {
 
   final KeyPressCallback onInput;
   final VoidKeyCallback onEvaluate;
+  final VoidKeyCallback onBackspace;
   final VoidKeyCallback onClear;
   final VoidKeyCallback onPercent;
   final VoidKeyCallback onToggleSign;
@@ -31,11 +33,12 @@ class CalculatorKeypad extends StatelessWidget {
       children: [
         _buildRow([
           _key(
-            label: 'AC',
-            semanticLabel: 'all clear',
+            label: '⌫', // Standard backspace symbol, or we can use 'C'
+            semanticLabel: 'delete',
             backgroundColor: colors.function,
             foregroundColor: Colors.black,
-            onPressed: onClear,
+            onPressed: onBackspace,
+            onLongPress: onClear,
           ),
           _key(
             label: '+/-',
@@ -60,21 +63,21 @@ class CalculatorKeypad extends StatelessWidget {
           ),
         ]),
         _buildRow([
-          _digit(colors, '7'),
-          _digit(colors, '8'),
-          _digit(colors, '9'),
+          _digit(colors, '7', context),
+          _digit(colors, '8', context),
+          _digit(colors, '9', context),
           _operator(colors, '×', 'multiply', '*'),
         ]),
         _buildRow([
-          _digit(colors, '4'),
-          _digit(colors, '5'),
-          _digit(colors, '6'),
+          _digit(colors, '4', context),
+          _digit(colors, '5', context),
+          _digit(colors, '6', context),
           _operator(colors, '−', 'subtract', '-'),
         ]),
         _buildRow([
-          _digit(colors, '1'),
-          _digit(colors, '2'),
-          _digit(colors, '3'),
+          _digit(colors, '1', context),
+          _digit(colors, '2', context),
+          _digit(colors, '3', context),
           _operator(colors, '+', 'add', '+'),
         ]),
         _buildRow([
@@ -82,7 +85,7 @@ class CalculatorKeypad extends StatelessWidget {
             label: '0',
             semanticLabel: '0',
             backgroundColor: colors.digit,
-            foregroundColor: Colors.white,
+            foregroundColor: Theme.of(context).colorScheme.onSurface,
             onPressed: () => onInput('0'),
             flex: 2,
           ),
@@ -90,7 +93,7 @@ class CalculatorKeypad extends StatelessWidget {
             label: '.',
             semanticLabel: 'decimal point',
             backgroundColor: colors.digit,
-            foregroundColor: Colors.white,
+            foregroundColor: Theme.of(context).colorScheme.onSurface,
             onPressed: () => onInput('.'),
           ),
           _key(
@@ -109,12 +112,12 @@ class CalculatorKeypad extends StatelessWidget {
     return Row(children: children);
   }
 
-  Widget _digit(SmartCalcColors colors, String value) {
+  Widget _digit(SmartCalcColors colors, String value, BuildContext context) {
     return _key(
       label: value,
       semanticLabel: value,
       backgroundColor: colors.digit,
-      foregroundColor: Colors.white,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
       onPressed: () => onInput(value),
     );
   }
@@ -140,6 +143,7 @@ class CalculatorKeypad extends StatelessWidget {
     required Color backgroundColor,
     required Color foregroundColor,
     required VoidCallback onPressed,
+    VoidCallback? onLongPress,
     int flex = 1,
   }) {
     return CalculatorKeyButton(
@@ -148,6 +152,7 @@ class CalculatorKeypad extends StatelessWidget {
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       onPressed: onPressed,
+      onLongPress: onLongPress,
       flex: flex,
     );
   }

@@ -1,7 +1,8 @@
 name: smartcalc
 description: SmartCalc scientific calculator
-publish_to: "none"
-version: 0.1.0+1
+publish_to: "Play Store"
+published_by: "Tarun Kushwah"
+version: 1.0.0+1
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -12,6 +13,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   hive: ^2.2.3
   decimal: ^3.2.4
+  google_fonts: ^8.2.1
 
 dev_dependencies:
   flutter_test:

@@ -59,23 +59,10 @@ class HistoryPanel extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 12, 8),
-            child: Row(
-              children: [
-                Text(
-                  'History',
-                  style: TextStyle(
-                    color: colorScheme.onSurface,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const Spacer(),
-                TextButton(
+            child: TextButton(
                   onPressed: onClearAll,
                   child: const Text('Clear All'),
                 ),
-              ],
-            ),
           ),
           ListView.builder(
             shrinkWrap: true,

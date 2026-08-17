@@ -98,6 +98,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       child: CalculatorKeypad(
                         onInput: _handleInput,
                         onEvaluate: _handleEvaluate,
+                        onBackspace: _handleBackspace,
                         onClear: _handleClear,
                         onPercent: _handlePercent,
                         onToggleSign: _handleToggleSign,
@@ -164,6 +165,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void _handleEvaluate() {
     setState(() {
       _controller.evaluate();
+    });
+  }
+
+  void _handleBackspace() {
+    setState(() {
+      _controller.backspace();
     });
   }
 

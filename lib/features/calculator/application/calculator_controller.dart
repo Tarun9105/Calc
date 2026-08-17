@@ -38,12 +38,28 @@ class CalculatorController {
   MemoryRepository get memoryRepository => _memoryRepository;
   SettingsRepository get settingsRepository => _settingsRepository;
 
+  bool _isOperator(String char) {
+    return ['+', '-', '*', '/', '^'].contains(char);
+  }
+
   void append(String value) {
+    final expression = _state.errorMessage == null ? _state.expression : '';
+
+    if (expression.isNotEmpty && _isOperator(value) && _isOperator(expression[expression.length - 1])) {
+      final nextExpression = expression.substring(0, expression.length - 1) + value;
+      _state = _state.copyWith(
+        expression: nextExpression,
+        display: nextExpression,
+        clearError: true,
+      );
+      return;
+    }
+
     final nextValue = _state.errorMessage == null ? value : _normalizeReplacement(value);
-    final nextExpression = '${_state.expression}$value';
+    final nextExpression = '$expression$nextValue';
     _state = _state.copyWith(
-      expression: _state.errorMessage == null ? nextExpression : nextValue,
-      display: _state.errorMessage == null ? nextExpression : nextValue,
+      expression: nextExpression,
+      display: nextExpression,
       clearError: true,
     );
   }
