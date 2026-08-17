@@ -25,8 +25,10 @@ class CalculatorDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scale = settings.textScale.scale;
-    final displayStyle = theme.textTheme.displayLarge ?? const TextStyle(fontSize: 64);
-    final expressionStyle = theme.textTheme.bodyLarge ?? const TextStyle(fontSize: 18);
+    final displayStyle =
+        theme.textTheme.displayLarge ?? const TextStyle(fontSize: 64);
+    final expressionStyle =
+        theme.textTheme.bodyLarge ?? const TextStyle(fontSize: 18);
     final mutedText = settings.themeMode == CalculatorThemeMode.light
         ? Colors.black54
         : Colors.white60;
@@ -37,78 +39,78 @@ class CalculatorDisplay extends StatelessWidget {
         ? Colors.black.withValues(alpha: 0.08)
         : Colors.white10;
 
-    return Expanded(
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
-        alignment: Alignment.bottomRight,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: onAngleModeTapped,
-                  borderRadius: BorderRadius.circular(999),
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: badgeColor,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      angleMode.shortLabel,
-                      style: expressionStyle.copyWith(
-                        color: mutedText,
-                        fontSize: 13 * scale,
-                        fontWeight: FontWeight.w600,
-                      ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+      alignment: Alignment.bottomRight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onAngleModeTapped,
+                borderRadius: BorderRadius.circular(999),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: badgeColor,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    angleMode.shortLabel,
+                    style: expressionStyle.copyWith(
+                      color: mutedText,
+                      fontSize: 13 * scale,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ),
             ),
+          ),
+          Text(
+            expression.isEmpty ? '0' : expression,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: expressionStyle.copyWith(
+              color: mutedText,
+              fontSize: 18 * scale,
+            ),
+          ),
+          const SizedBox(height: 12),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Text(
+              display,
+              textAlign: TextAlign.right,
+              style: displayStyle.copyWith(
+                fontSize: 64 * scale,
+                color: errorMessage == null
+                    ? primaryText
+                    : const Color(0xFFFF7B72),
+              ),
+            ),
+          ),
+          if (errorMessage != null) ...[
+            const SizedBox(height: 10),
             Text(
-              expression.isEmpty ? '0' : expression,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              errorMessage!,
+              textAlign: TextAlign.right,
               style: expressionStyle.copyWith(
-                color: mutedText,
-                fontSize: 18 * scale,
+                color: const Color(0xFFFF7B72),
+                fontSize: 14,
               ),
             ),
-            const SizedBox(height: 12),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerRight,
-              child: Text(
-                display,
-                textAlign: TextAlign.right,
-                style: displayStyle.copyWith(
-                  fontSize: 64 * scale,
-                  color: errorMessage == null ? primaryText : const Color(0xFFFF7B72),
-                ),
-              ),
-            ),
-            if (errorMessage != null) ...[
-              const SizedBox(height: 10),
-              Text(
-                errorMessage!,
-                textAlign: TextAlign.right,
-                style: expressionStyle.copyWith(
-                  color: const Color(0xFFFF7B72),
-                  fontSize: 14,
-                ),
-              ),
-            ],
           ],
-        ),
+        ],
       ),
     );
   }
 }
-
