@@ -3,11 +3,7 @@ import '../../memory/application/memory_repository.dart';
 import '../../memory/domain/memory_value.dart';
 import '../../history/application/history_repository.dart';
 
-/// Controller that owns memory and history state for the Memory screen.
-///
-/// This controller is created by [CalculatorController] and shares the same
-/// underlying repository instances so that changes made here are reflected in
-/// calculator state when the user navigates back.
+
 class MemoryController {
   MemoryController({
     MemoryRepository? memoryRepository,
@@ -29,18 +25,17 @@ class MemoryController {
   double? get memoryValue => _memoryValue;
   List<HistoryEntry> get history => _history;
 
-  // ── Memory operations ──────────────────────────────────────────────────────
 
   void memoryClear() {
     _memoryRepository.clear();
     _memoryValue = null;
   }
 
-  void memoryRecall(void Function(double value) onRecalled) {
+  double? memoryRecall() {
     final mv = _memoryRepository.load();
-    if (mv == null) return;
+    if (mv == null) return null;
     _memoryValue = mv.value;
-    onRecalled(mv.value);
+    return mv.value;
   }
 
   void memoryAdd(double currentValue) {
@@ -60,10 +55,6 @@ class MemoryController {
     _memoryValue = saved.value;
   }
 
-  // ── History operations ─────────────────────────────────────────────────────
-
-  /// Returns the expression string of the recalled entry (caller decides what
-  /// to do with it, e.g. paste into calculator).
   String? recallHistory(int index) {
     if (index < 0 || index >= _history.length) return null;
     return _history[index].expression;

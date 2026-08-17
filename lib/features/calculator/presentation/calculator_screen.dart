@@ -6,6 +6,7 @@ import '../application/calculator_state.dart';
 import '../domain/angle_mode.dart';
 import '../../memory/application/memory_controller.dart';
 import '../../memory/presentation/memory_screen.dart';
+import '../../memory/presentation/memory_toolbar.dart';
 import '../../settings/application/settings_controller.dart';
 import '../../settings/domain/app_settings.dart';
 import '../../settings/presentation/settings_screen.dart';
@@ -83,7 +84,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                      child: const SizedBox.shrink(), // memory toolbar moved to MemoryScreen
+                      child: MemoryToolbar(
+                        memoryValue: _state.memoryValue,
+                        onMemoryClear: () => setState(() => _controller.memoryClear()),
+                        onMemoryRecall: () => setState(() => _controller.memoryRecall()),
+                        onMemoryAdd: () => setState(() => _controller.memoryAdd()),
+                        onMemorySubtract: () => setState(() => _controller.memorySubtract()),
+                        onMemoryStore: () => setState(() => _controller.memoryStore()),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
@@ -127,21 +135,21 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   Future<void> _openMemory() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute<dynamic>(
         builder: (_) => MemoryScreen(
           controller: _memoryController,
           themeMode: _state.settings.themeMode,
         ),
       ),
     );
-    // Sync memory value back to calculator state.
+    
+    // Sync state back to calculator state.
     setState(() {
-      if (_memoryController.memoryValue != null) {
-        _controller.memoryStore();
-      } else {
-        _controller.memoryClear();
+      if (result is String) {
+        _controller.pasteExpression(result);
       }
+      _controller.refreshMemoryState();
     });
   }
 

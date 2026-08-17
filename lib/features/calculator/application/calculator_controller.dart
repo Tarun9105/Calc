@@ -58,6 +58,14 @@ class CalculatorController {
     );
   }
 
+  void pasteExpression(String value) {
+    _state = _state.copyWith(
+      expression: value,
+      display: value,
+      clearError: true,
+    );
+  }
+
   void appendConstant(String constant) {
     append(constant);
   }
@@ -260,6 +268,14 @@ class CalculatorController {
     _memoryRepository.save(nextValue);
     _state = _state.copyWith(
       memoryValue: nextValue,
+      clearError: true,
+    );
+  }
+
+  void refreshMemoryState() {
+    _state = _state.copyWith(
+      memoryValue: _memoryRepository.load()?.value,
+      clearMemoryValue: _memoryRepository.load() == null,
       clearError: true,
     );
   }

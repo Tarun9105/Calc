@@ -50,34 +50,18 @@ class _MemoryScreenState extends State<MemoryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Memory section ──────────────────────────────────────────
-                _SectionLabel(label: 'Memory'),
                 const SizedBox(height: 8),
-                MemoryToolbar(
-                  memoryValue: _ctrl.memoryValue,
-                  onMemoryClear: () => setState(_ctrl.memoryClear),
-                  onMemoryRecall: () => setState(
-                    () => _ctrl.memoryRecall((_) {}),
-                  ),
-                  onMemoryAdd: () => setState(
-                    () => _ctrl.memoryAdd(_ctrl.memoryValue ?? 0),
-                  ),
-                  onMemorySubtract: () => setState(
-                    () => _ctrl.memorySubtract(_ctrl.memoryValue ?? 0),
-                  ),
-                  onMemoryStore: () => setState(
-                    () => _ctrl.memoryStore(_ctrl.memoryValue ?? 0),
-                  ),
-                ),
-                const SizedBox(height: 24),
                 // ── History section ──────────────────────────────────────────
                 _SectionLabel(label: 'History'),
                 const SizedBox(height: 8),
                 HistoryPanel(
                   history: _ctrl.history,
-                  onRecall: (index) => setState(() {
-                    _ctrl.recallHistory(index);
-                  }),
+                  onRecall: (index) {
+                    final recalledString = _ctrl.recallHistory(index);
+                    if (recalledString != null) {
+                      Navigator.of(context).pop(recalledString);
+                    }
+                  },
                   onDelete: (index) =>
                       setState(() => _ctrl.deleteHistory(index)),
                   onClearAll: () => setState(_ctrl.clearHistory),
