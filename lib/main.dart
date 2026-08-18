@@ -25,6 +25,7 @@ void main() async {
   // Apply the persisted soundEnabled setting before the UI starts.
   // Use key-based access ('settings') matching HiveSettingsRepository — NOT getAt(0).
   final savedSettings = Hive.box<AppSettings>('settings').get('settings');
+  await SoundService.instance.init();
   SoundService.instance.setEnabled(savedSettings?.soundEnabled ?? false);
 
   runApp(const SmartCalcApp());

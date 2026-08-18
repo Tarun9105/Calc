@@ -1,11 +1,9 @@
-import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 
-/// Singleton service that plays the system tap/click sound on button presses.
-///
-/// Uses Flutter's built-in [SystemSound] — no external package or audio asset
-/// required. The sound respects the device's system sound settings.
+/// Singleton service that handles button click sound playback.
 ///
 /// Usage:
+///   await SoundService.instance.init();   // call once in main()
 ///   SoundService.instance.setEnabled(true);
 ///   SoundService.instance.playKeyPress(); // call on each button press
 class SoundService {
@@ -13,22 +11,36 @@ class SoundService {
 
   static final SoundService instance = SoundService._();
 
+  final AudioPlayer _player = AudioPlayer();
   bool _enabled = false;
 
-  /// No-op — kept for API symmetry. Call once at app startup if needed.
-  void init() {}
+  /// Preloads the key-press sound asset so the first button press
+  /// plays instantly without any loading lag.
+  Future<void> init() async {
+    try {
+      await _player.setAsset('assets/sounds/key_press.wav');
+      await _player.setVolume(1.0);
+    } catch (_) {}
+  }
 
-  /// Enable or disable sound playback. Driven by [AppSettings.soundEnabled].
+  /// Enable or disable sound playback.
   void setEnabled(bool enabled) {
     _enabled = enabled;
   }
 
-  /// Play the system click sound if sound is enabled.
+  /// Play a short key-press click if sound is enabled.
   Future<void> playKeyPress() async {
     if (!_enabled) return;
-    await SystemSound.play(SystemSoundType.click);
+    try {
+      await _player.seek(Duration.zero);
+      await _player.play();
+    } catch (_) {
+      // Silently ignore audio errors
+    }
   }
 
-  /// No-op — SoundService is an app-level singleton; no cleanup needed.
-  void dispose() {}
+  /// Release audio resources.
+  Future<void> dispose() async {
+    await _player.dispose();
+  }
 }
