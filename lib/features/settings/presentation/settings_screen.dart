@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme.dart';
+import '../../../core/services/sound_service.dart';
 import '../application/settings_controller.dart';
 import '../presentation/settings_panel.dart';
 
@@ -39,8 +40,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   setState(() => _ctrl.updateDecimalPrecision(v)),
               onHapticsChanged: (v) =>
                   setState(() => _ctrl.updateHapticsEnabled(v)),
-              onSoundChanged: (v) =>
-                  setState(() => _ctrl.updateSoundEnabled(v)),
+              onSoundChanged: (v) {
+                setState(() => _ctrl.updateSoundEnabled(v));
+                // Live-update audio even while on settings page
+                SoundService.instance.setEnabled(v);
+              },
               onCustomOperatorColorChanged: (v) =>
                   setState(() => _ctrl.updateCustomOperatorColor(v)),
               onCustomButtonBackgroundTextChanged: (v) =>

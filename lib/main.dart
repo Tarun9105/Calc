@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app/app.dart';
+import 'core/services/sound_service.dart';
 import 'features/history/domain/history_entry.dart';
 import 'features/settings/domain/app_settings.dart';
 import 'features/memory/domain/memory_value.dart';
@@ -20,6 +21,11 @@ void main() async {
   await Hive.openBox<HistoryEntry>('history');
   await Hive.openBox<AppSettings>('settings');
   await Hive.openBox<MemoryValue>('memory');
+
+  // Apply the persisted soundEnabled setting before the UI starts.
+  // Use key-based access ('settings') matching HiveSettingsRepository — NOT getAt(0).
+  final savedSettings = Hive.box<AppSettings>('settings').get('settings');
+  SoundService.instance.setEnabled(savedSettings?.soundEnabled ?? false);
 
   runApp(const SmartCalcApp());
 }

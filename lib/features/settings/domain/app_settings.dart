@@ -64,8 +64,10 @@ class AppSettings {
       decimalPrecision: decimalPrecision ?? this.decimalPrecision,
       hapticsEnabled: hapticsEnabled ?? this.hapticsEnabled,
       soundEnabled: soundEnabled ?? this.soundEnabled,
-      customOperatorColorValue: customOperatorColorValue ?? this.customOperatorColorValue,
-      customButtonBackgroundText: customButtonBackgroundText ?? this.customButtonBackgroundText,
+      customOperatorColorValue:
+          customOperatorColorValue ?? this.customOperatorColorValue,
+      customButtonBackgroundText:
+          customButtonBackgroundText ?? this.customButtonBackgroundText,
     );
   }
 }

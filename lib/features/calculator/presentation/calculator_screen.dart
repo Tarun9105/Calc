@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme.dart';
+import '../../../core/services/sound_service.dart';
 import '../application/calculator_controller.dart';
 import '../application/calculator_state.dart';
 import '../domain/angle_mode.dart';
@@ -34,6 +35,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   );
 
   CalculatorState get _state => _controller.state;
+
+  @override
+  void initState() {
+    super.initState();
+    // Sync SoundService with the persisted soundEnabled setting.
+    SoundService.instance.setEnabled(_state.settings.soundEnabled);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,11 +105,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
                       child: MemoryToolbar(
                         memoryValue: _state.memoryValue,
-                        onMemoryClear: () => setState(() => _controller.memoryClear()),
-                        onMemoryRecall: () => setState(() => _controller.memoryRecall()),
-                        onMemoryAdd: () => setState(() => _controller.memoryAdd()),
-                        onMemorySubtract: () => setState(() => _controller.memorySubtract()),
-                        onMemoryStore: () => setState(() => _controller.memoryStore()),
+                        onMemoryClear: () { SoundService.instance.playKeyPress(); setState(() => _controller.memoryClear()); },
+                        onMemoryRecall: () { SoundService.instance.playKeyPress(); setState(() => _controller.memoryRecall()); },
+                        onMemoryAdd: () { SoundService.instance.playKeyPress(); setState(() => _controller.memoryAdd()); },
+                        onMemorySubtract: () { SoundService.instance.playKeyPress(); setState(() => _controller.memorySubtract()); },
+                        onMemoryStore: () { SoundService.instance.playKeyPress(); setState(() => _controller.memoryStore()); },
                       ),
                     ),
                     if (!isLandscape)
@@ -182,15 +190,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
     
     setState(() {
-      _controller.updateThemeMode(_settingsController.settings.themeMode);
-      _controller.updateTextScale(_settingsController.settings.textScale);
-      _controller.updateDecimalPrecision(
-          _settingsController.settings.decimalPrecision);
-      _controller
-          .updateHapticsEnabled(_settingsController.settings.hapticsEnabled);
-      _controller
-          .updateSoundEnabled(_settingsController.settings.soundEnabled);
+      // Sync ALL settings fields back in one call — including
+      // customOperatorColorValue and customButtonBackgroundText which
+      // were previously not relayed (causing the color-only-on-settings-page bug).
+      _controller.applySettings(_settingsController.settings);
     });
+    // Keep SoundService in sync with the (possibly updated) setting.
+    SoundService.instance.setEnabled(_settingsController.settings.soundEnabled);
   }
 
   Future<void> _openMemory() async {
@@ -214,54 +220,63 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   void _handleInput(String value) {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.append(value);
     });
   }
 
   void _handleEvaluate() {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.evaluate();
     });
   }
 
   void _handleBackspace() {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.backspace();
     });
   }
 
   void _handleClear() {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.clear();
     });
   }
 
   void _handlePercent() {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.applyPercent();
     });
   }
 
   void _handleToggleSign() {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.toggleSign();
     });
   }
 
   void _handleFunction(String functionName) {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.applyFunction(functionName);
     });
   }
 
   void _handlePower() {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.appendPower();
     });
   }
 
   void _handleCycleAngleMode() {
+    SoundService.instance.playKeyPress();
     setState(() {
       _controller.cycleAngleMode();
     });

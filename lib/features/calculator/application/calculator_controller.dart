@@ -326,6 +326,14 @@ class CalculatorController {
     _saveSettings(_state.settings.copyWith(soundEnabled: isEnabled));
   }
 
+  /// Bulk-apply all fields from [settings] at once.
+  /// Use this after returning from SettingsScreen to ensure every field
+  /// (including customOperatorColorValue and customButtonBackgroundText)
+  /// is synced back to CalculatorController in a single call.
+  void applySettings(AppSettings settings) {
+    _saveSettings(settings);
+  }
+
   String _normalizeReplacement(String value) {
     if (value == '.') {
       return '0.';
