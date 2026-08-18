@@ -131,7 +131,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                         end: (!isLandscape && _isScientificExpanded) ? 400.0 : 0.0,
                       ),
                       builder: (context, flex, child) {
-                        if (flex == 0.0) return const SizedBox.shrink();
+                        if (flex < 1.0) return const SizedBox.shrink();
                         return Expanded(
                           flex: flex.toInt(),
                           child: Padding(

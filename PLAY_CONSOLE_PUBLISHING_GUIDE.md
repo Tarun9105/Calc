@@ -23,16 +23,15 @@ This guide covers everything you need to know to publish **SmartCalc scientific 
 On the Dashboard, find the "Set up your app" section. You MUST complete all these tasks before publishing.
 
 1. **Privacy Policy:** Paste the URL where you hosted your Privacy Policy.
-2. **App Access:** Select "All functionality is available without restrictions" (SmartCalc doesn't require a login).
+2. **App Access/Sign-in Details:** Select "All functionality is available without restrictions" (SmartCalc doesn't require a login).
 3. **Ads:** Select "No, my app does not contain ads" (unless you added AdMob).
 4. **Content Rating:** 
    - Enter your email.
-   - Category: Utility / Productivity.
+   - Category: Select **"All other app types"**.
    - Answer "No" to all questions regarding violence, sexuality, offensive language, controlled substances, etc.
    - Save and generate the rating (usually E for Everyone / PEGI 3).
 5. **Target Audience and Content:** 
-   - Select the target age groups (e.g., 13-15, 16-17, 18 and over). 
-   - *Note: If you select under 13, you must comply with the Families policy, which requires additional strict data handling rules. For a standard calculator, 13+ is easiest.*
+   - Select the exact target age groups: **13-15**, **16-17**, and **18 and over**. (Do NOT select under 13 to avoid strict Families policy requirements).
    - Appeal to children: No.
 6. **News App:** Select "No".
 7. **COVID-19 contact tracing:** Select "My app is not a publicly available COVID-19 contact tracing or status app."
@@ -40,7 +39,21 @@ On the Dashboard, find the "Set up your app" section. You MUST complete all thes
    - Does your app collect or share any of the required user data types? -> **No** (SmartCalc processes everything locally).
    - Save and submit.
 9. **Government Apps:** Select "No".
-10. **Financial Features:** Declare if your app provides financial features. Select "My app doesn't provide any financial features" (since it's just a scientific calculator).
+10. **Financial Features:** Select **"My app doesn't provide any financial features"**.
+11. **Advertising ID:** 
+    - Does your app use an advertising ID? -> **No** (Since you don't have Ads or AdMob integrated).
+
+## Phase 3.5: Store Settings
+Navigate to **Store presence -> Store settings**.
+1. **App category:** 
+   - **App or game:** App
+   - **Category:** Select **"Productivity"**.
+   - **Tags:** Click Manage tags and add **"Productivity"** and **"Tools"**.
+2. **Store Listing contact details:** 
+   - **Email address:** Enter your support email (e.g., `[EMAIL_ADDRESS]`).
+   - You can leave Phone number and Website blank.
+3. **External marketing:** 
+   - Leave the box checked for **"Advertise my app outside Google Play"**.
 
 ## Phase 4: Store Listing
 Navigate to **Grow -> Store presence -> Main store listing**.

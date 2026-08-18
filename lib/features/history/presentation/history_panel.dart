@@ -69,7 +69,9 @@ class HistoryPanel extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: history.length,
             itemBuilder: (context, index) {
-              final entry = history[index];
+              // Reverse display order: newest entry shown first
+              final realIndex = history.length - 1 - index;
+              final entry = history[realIndex];
               return ListTile(
                 title: Text(
                   entry.expression,
@@ -83,9 +85,9 @@ class HistoryPanel extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                onTap: () => onRecall(index),
+                onTap: () => onRecall(realIndex),
                 trailing: IconButton(
-                  onPressed: () => onDelete(index),
+                  onPressed: () => onDelete(realIndex),
                   icon: const Icon(Icons.delete_outline),
                 ),
               );
