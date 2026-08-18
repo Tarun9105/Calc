@@ -75,19 +75,26 @@ Navigate to **Grow -> Store presence -> Main store listing**.
    - You must gather feedback and answer Google's questions about how you incorporated this feedback.
    - *If your account is older or an enterprise account, you can skip straight to Production.*
 
-## Phase 6: Build and Upload
-1. In your terminal, navigate to `f:\Dev\Projects\tarunSisodia\Internship\Calc`.
-2. Build the release App Bundle:
-   ```bash
-   flutter build appbundle --release
-   ```
-3. Locate the `.aab` file at `build/app/outputs/bundle/release/app-release.aab`.
-4. In Play Console, go to **Testing -> Closed testing** (or **Production** if eligible).
-5. Click **Create new release**.
-6. If this is your first release, Play Console will ask you to opt into **Play App Signing**. Click "Continue/Accept" to let Google manage your app signing key.
-7. Upload your `app-release.aab` file.
-8. Enter Release name (e.g., "1.0.0") and Release notes.
-9. Click **Save** and then **Review release**.
+## Phase 6: Build and Upload (Closed Testing Track)
+If you are required to use the Closed Testing track, go to **Testing -> Closed testing** and complete the "Set up closed testing track" checklist:
+
+1. **Select country:** Click "Select country", click "Add countries/regions", select all desired countries (or worldwide), and click Save.
+2. **Select testers:** Click "Select testers", create an email list with your 20 testers' Gmail addresses, and make sure the list is checked and saved.
+3. **Create a new release:**
+   - In your terminal, build the release App Bundle:
+     ```bash
+     flutter build appbundle --release
+     ```
+   - In the Play Console, click **"Create a new release"**.
+   - Opt into **Play App Signing** if prompted (click "Continue/Accept").
+   - Drag and drop your `.aab` file from `build/app/outputs/bundle/release/app-release.aab` into the upload box.
+   - Enter a Release name (e.g., "1.0.0") and Release notes.
+   - Click **Next** to proceed to the Review page.
+
+## Phase 6.5: AI Asset Declaration
+On the Review page, Google will ask if your store assets use AI-generated content.
+- Select **"Don't label assets"** (since your screenshots are genuine app images placed in mockups, they do not require strict AI-generation regulatory labels).
+- Click **Save**.
 
 ## Phase 7: Rollout & Review
 1. Address any warnings or errors on the review page. (Warnings are usually okay, Errors must be fixed).
@@ -97,3 +104,9 @@ Navigate to **Grow -> Store presence -> Main store listing**.
 ## Maintenance and Updates
 - To release an update, you must increment the `version: 1.0.0+1` in your `pubspec.yaml` (e.g., to `1.0.1+2`), run `flutter build appbundle --release` again, and upload the new `.aab` to a new release in the Play Console.
 - Regularly check the **Policy status** tab in the Play Console to ensure you aren't violating any new Google policies.
+
+When you want to release an update later, you only need to change that one single line in pubspec.yaml.
+
+For example, to do a small bugfix update, you would just change it to: version: 1.0.1+2
+
+Then you just run flutter build appbundle again. Flutter will automatically inject the new version into the Android app, and Google Play Console will automatically read it and know it's a newer update. You never have to manually edit any Android files!
