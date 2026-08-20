@@ -37,4 +37,3 @@ class InMemoryHistoryRepository implements HistoryRepository {
     return List.unmodifiable(_entries);
   }
 }
-

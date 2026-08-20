@@ -38,7 +38,6 @@ class CalculatorController {
 
   CalculatorState get state => _state;
 
-  /// Expose repositories so sibling feature-controllers can share the same store.
   HistoryRepository get historyRepository => _historyRepository;
   MemoryRepository get memoryRepository => _memoryRepository;
   SettingsRepository get settingsRepository => _settingsRepository;
@@ -50,8 +49,11 @@ class CalculatorController {
   void append(String value) {
     final expression = _state.errorMessage == null ? _state.expression : '';
 
-    if (expression.isNotEmpty && _isOperator(value) && _isOperator(expression[expression.length - 1])) {
-      final nextExpression = expression.substring(0, expression.length - 1) + value;
+    if (expression.isNotEmpty &&
+        _isOperator(value) &&
+        _isOperator(expression[expression.length - 1])) {
+      final nextExpression =
+          expression.substring(0, expression.length - 1) + value;
       _state = _state.copyWith(
         expression: nextExpression,
         display: _getLiveResult(nextExpression) ?? nextExpression,
@@ -60,7 +62,8 @@ class CalculatorController {
       return;
     }
 
-    final nextValue = _state.errorMessage == null ? value : _normalizeReplacement(value);
+    final nextValue =
+        _state.errorMessage == null ? value : _normalizeReplacement(value);
     final nextExpression = '$expression$nextValue';
     _state = _state.copyWith(
       expression: nextExpression,
@@ -72,7 +75,7 @@ class CalculatorController {
   void applyFunction(String functionName) {
     final expression = _state.errorMessage == null ? _state.expression : '';
     final nextExpression = '$expression$functionName(';
-    
+
     _state = _state.copyWith(
       expression: nextExpression,
       display: _getLiveResult(nextExpression) ?? nextExpression,
@@ -115,9 +118,8 @@ class CalculatorController {
       return;
     }
 
-    final nextExpression = expression.startsWith('-')
-        ? expression.substring(1)
-        : '-$expression';
+    final nextExpression =
+        expression.startsWith('-') ? expression.substring(1) : '-$expression';
 
     _state = _state.copyWith(
       expression: nextExpression,
@@ -165,10 +167,13 @@ class CalculatorController {
       return;
     }
 
-    final nextExpression = _state.expression.substring(0, _state.expression.length - 1);
+    final nextExpression =
+        _state.expression.substring(0, _state.expression.length - 1);
     _state = _state.copyWith(
       expression: nextExpression,
-      display: nextExpression.isEmpty ? '0' : (_getLiveResult(nextExpression) ?? nextExpression),
+      display: nextExpression.isEmpty
+          ? '0'
+          : (_getLiveResult(nextExpression) ?? nextExpression),
       clearError: true,
     );
   }
@@ -326,10 +331,6 @@ class CalculatorController {
     _saveSettings(_state.settings.copyWith(soundEnabled: isEnabled));
   }
 
-  /// Bulk-apply all fields from [settings] at once.
-  /// Use this after returning from SettingsScreen to ensure every field
-  /// (including customOperatorColorValue and customButtonBackgroundText)
-  /// is synced back to CalculatorController in a single call.
   void applySettings(AppSettings settings) {
     _saveSettings(settings);
   }
@@ -345,9 +346,7 @@ class CalculatorController {
     if (value.isInteger) {
       return NumberFormat.decimalPattern().format(value.toBigInt().toInt());
     }
-    
-    // We want the localized decimal separator, but we have to handle the precision correctly.
-    // decimalPattern() with minimumFractionDigits / maximumFractionDigits can work.
+
     final formatter = NumberFormat.decimalPattern()
       ..maximumFractionDigits = _state.settings.decimalPrecision;
     return formatter.format(value.toDouble());
@@ -364,13 +363,15 @@ class CalculatorController {
 
   String? _getLiveResult(String expr) {
     if (expr.isEmpty) return null;
-    
-    // Strip trailing operators and periods for a valid partial evaluation
+
     String evalStr = expr;
-    while (evalStr.isNotEmpty && (_isOperator(evalStr[evalStr.length - 1]) || evalStr[evalStr.length - 1] == '.' || evalStr[evalStr.length - 1] == '(')) {
+    while (evalStr.isNotEmpty &&
+        (_isOperator(evalStr[evalStr.length - 1]) ||
+            evalStr[evalStr.length - 1] == '.' ||
+            evalStr[evalStr.length - 1] == '(')) {
       evalStr = evalStr.substring(0, evalStr.length - 1);
     }
-    
+
     if (evalStr.isEmpty) return null;
 
     final result = _engine.evaluate(evalStr, angleMode: _state.angleMode);

@@ -26,4 +26,3 @@ class InMemoryMemoryRepository implements MemoryRepository {
     return _memoryValue!;
   }
 }
-

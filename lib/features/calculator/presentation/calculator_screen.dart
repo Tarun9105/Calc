@@ -39,7 +39,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   void initState() {
     super.initState();
-    // Sync SoundService with the persisted soundEnabled setting.
+
     SoundService.instance.setEnabled(_state.settings.soundEnabled);
   }
 
@@ -60,13 +60,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-         
           leading: IconButton(
             tooltip: 'Settings',
             icon: const Icon(Icons.tune_rounded),
             onPressed: _openSettings,
           ),
-          
           actions: [
             IconButton(
               tooltip: 'Memory & History',
@@ -93,23 +91,38 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     Expanded(
                       flex: 400,
                       child: CalculatorDisplay(
-                      expression: _state.expression,
-                      display: _state.display,
-                      angleMode: _state.angleMode,
-                      settings: _state.settings,
-                      errorMessage: _state.errorMessage,
-                      onAngleModeTapped: _handleCycleAngleMode,
+                        expression: _state.expression,
+                        display: _state.display,
+                        angleMode: _state.angleMode,
+                        settings: _state.settings,
+                        errorMessage: _state.errorMessage,
+                        onAngleModeTapped: _handleCycleAngleMode,
+                      ),
                     ),
-                  ),
-                  Padding(
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
                       child: MemoryToolbar(
                         memoryValue: _state.memoryValue,
-                        onMemoryClear: () { SoundService.instance.playKeyPress(); setState(() => _controller.memoryClear()); },
-                        onMemoryRecall: () { SoundService.instance.playKeyPress(); setState(() => _controller.memoryRecall()); },
-                        onMemoryAdd: () { SoundService.instance.playKeyPress(); setState(() => _controller.memoryAdd()); },
-                        onMemorySubtract: () { SoundService.instance.playKeyPress(); setState(() => _controller.memorySubtract()); },
-                        onMemoryStore: () { SoundService.instance.playKeyPress(); setState(() => _controller.memoryStore()); },
+                        onMemoryClear: () {
+                          SoundService.instance.playKeyPress();
+                          setState(() => _controller.memoryClear());
+                        },
+                        onMemoryRecall: () {
+                          SoundService.instance.playKeyPress();
+                          setState(() => _controller.memoryRecall());
+                        },
+                        onMemoryAdd: () {
+                          SoundService.instance.playKeyPress();
+                          setState(() => _controller.memoryAdd());
+                        },
+                        onMemorySubtract: () {
+                          SoundService.instance.playKeyPress();
+                          setState(() => _controller.memorySubtract());
+                        },
+                        onMemoryStore: () {
+                          SoundService.instance.playKeyPress();
+                          setState(() => _controller.memoryStore());
+                        },
                       ),
                     ),
                     if (!isLandscape)
@@ -118,14 +131,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                         child: Center(
                           child: InkWell(
                             borderRadius: BorderRadius.circular(20),
-                            onTap: () => setState(() => _isScientificExpanded = !_isScientificExpanded),
+                            onTap: () => setState(() =>
+                                _isScientificExpanded = !_isScientificExpanded),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 4),
                               child: Icon(
-                                _isScientificExpanded 
-                                    ? Icons.keyboard_arrow_down_rounded 
+                                _isScientificExpanded
+                                    ? Icons.keyboard_arrow_down_rounded
                                     : Icons.keyboard_arrow_up_rounded,
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.5),
                               ),
                             ),
                           ),
@@ -136,7 +154,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       curve: Curves.easeInOutCubic,
                       tween: Tween<double>(
                         begin: 0.0,
-                        end: (!isLandscape && _isScientificExpanded) ? 400.0 : 0.0,
+                        end: (!isLandscape && _isScientificExpanded)
+                            ? 400.0
+                            : 0.0,
                       ),
                       builder: (context, flex, child) {
                         if (flex < 1.0) return const SizedBox.shrink();
@@ -167,7 +187,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                           onClear: _handleClear,
                           onPercent: _handlePercent,
                           onToggleSign: _handleToggleSign,
-                          customButtonBackgroundText: _state.settings.customButtonBackgroundText,
+                          customButtonBackgroundText:
+                              _state.settings.customButtonBackgroundText,
                         ),
                       ),
                     ),
@@ -181,21 +202,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-
   Future<void> _openSettings() async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => SettingsScreen(controller: _settingsController),
       ),
     );
-    
+
     setState(() {
-      // Sync ALL settings fields back in one call — including
-      // customOperatorColorValue and customButtonBackgroundText which
-      // were previously not relayed (causing the color-only-on-settings-page bug).
       _controller.applySettings(_settingsController.settings);
     });
-    // Keep SoundService in sync with the (possibly updated) setting.
+
     SoundService.instance.setEnabled(_settingsController.settings.soundEnabled);
   }
 
@@ -208,7 +225,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         ),
       ),
     );
-    
+
     setState(() {
       if (result is String) {
         _controller.pasteExpression(result);
@@ -216,8 +233,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       _controller.refreshMemoryState();
     });
   }
-
-  // ── Handlers ────────────────────────────────────────────────────────────────
 
   void _handleInput(String value) {
     SoundService.instance.playKeyPress();

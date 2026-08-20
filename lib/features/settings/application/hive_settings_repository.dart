@@ -4,7 +4,7 @@ import 'settings_repository.dart';
 
 class HiveSettingsRepository implements SettingsRepository {
   HiveSettingsRepository() : _box = Hive.box<AppSettings>('settings');
-  
+
   final Box<AppSettings> _box;
 
   @override

@@ -42,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   setState(() => _ctrl.updateHapticsEnabled(v)),
               onSoundChanged: (v) {
                 setState(() => _ctrl.updateSoundEnabled(v));
-                // Live-update audio even while on settings page
+
                 SoundService.instance.setEnabled(v);
               },
               onCustomOperatorColorChanged: (v) =>

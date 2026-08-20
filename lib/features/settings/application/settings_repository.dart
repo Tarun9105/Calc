@@ -19,4 +19,3 @@ class InMemorySettingsRepository implements SettingsRepository {
     return _settings;
   }
 }
-

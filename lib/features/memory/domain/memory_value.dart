@@ -9,4 +9,3 @@ class MemoryValue {
   @HiveField(0)
   final double value;
 }
-

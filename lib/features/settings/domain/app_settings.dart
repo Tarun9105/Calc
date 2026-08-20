@@ -108,4 +108,3 @@ extension CalculatorThemeModeLabel on CalculatorThemeMode {
     }
   }
 }
-

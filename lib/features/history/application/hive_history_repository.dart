@@ -4,7 +4,7 @@ import 'history_repository.dart';
 
 class HiveHistoryRepository implements HistoryRepository {
   HiveHistoryRepository() : _box = Hive.box<HistoryEntry>('history');
-  
+
   final Box<HistoryEntry> _box;
 
   @override

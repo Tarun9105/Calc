@@ -12,10 +12,8 @@ class MemoryScreen extends StatefulWidget {
     super.key,
   });
 
-  /// Shared [MemoryController] so that memory/history actions are persisted.
   final MemoryController controller;
 
-  /// App settings to determine the theme mode and colors.
   final AppSettings settings;
 
   @override
@@ -56,7 +54,6 @@ class _MemoryScreenState extends State<MemoryScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 8),
-                // ── History section ──────────────────────────────────────────
                 _SectionLabel(label: 'History'),
                 const SizedBox(height: 8),
                 HistoryPanel(

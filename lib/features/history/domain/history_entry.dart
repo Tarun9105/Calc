@@ -17,4 +17,3 @@ class HistoryEntry {
   @HiveField(2)
   final DateTime createdAt;
 }
-

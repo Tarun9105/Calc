@@ -1,7 +1,6 @@
 import '../domain/app_settings.dart';
 import 'settings_repository.dart';
 
-/// Controller that owns settings state and persists changes.
 class SettingsController {
   SettingsController({SettingsRepository? settingsRepository})
       : _settingsRepository =

@@ -77,7 +77,8 @@ class _Parser {
         if (divisor == Decimal.zero) {
           throw const _CalculatorException(CalculatorError.divideByZero);
         }
-        value = Decimal.parse((value.toDouble() / divisor.toDouble()).toString());
+        value =
+            Decimal.parse((value.toDouble() / divisor.toDouble()).toString());
       } else if (_match('%')) {
         final divisor = _parsePower();
         if (divisor == Decimal.zero) {
@@ -90,7 +91,11 @@ class _Parser {
           throw const _CalculatorException(CalculatorError.divideByZero);
         }
         value %= divisor;
-      } else if (!_isAtEnd && (_peekIsLetter || input[index] == '(' || _isDigit(input[index]) || input[index] == '.')) {
+      } else if (!_isAtEnd &&
+          (_peekIsLetter ||
+              input[index] == '(' ||
+              _isDigit(input[index]) ||
+              input[index] == '.')) {
         value *= _parsePower();
       } else {
         return value;
@@ -103,7 +108,8 @@ class _Parser {
     _skipWhitespace();
     if (_match('^')) {
       final power = _parsePower();
-      value = Decimal.parse(math.pow(value.toDouble(), power.toDouble()).toString());
+      value = Decimal.parse(
+          math.pow(value.toDouble(), power.toDouble()).toString());
     }
     return value;
   }
@@ -151,7 +157,7 @@ class _Parser {
       return _applyFunction(identifier, argument);
     }
 
-    return _parseNumber();
+    return _parseNumber();  
   }
 
   Decimal _parseNumber() {
@@ -187,8 +193,14 @@ class _Parser {
     }
 
     final parsedStr = input.substring(start, index);
-    if (parsedStr == '.' || parsedStr.endsWith('e') || parsedStr.endsWith('E') || parsedStr.endsWith('e+') || parsedStr.endsWith('E+') || parsedStr.endsWith('e-') || parsedStr.endsWith('E-')) {
-       throw const _CalculatorException(CalculatorError.invalidExpression);
+    if (parsedStr == '.' ||
+        parsedStr.endsWith('e') ||
+        parsedStr.endsWith('E') ||
+        parsedStr.endsWith('e+') ||
+        parsedStr.endsWith('E+') ||
+        parsedStr.endsWith('e-') ||
+        parsedStr.endsWith('E-')) {
+      throw const _CalculatorException(CalculatorError.invalidExpression);
     }
 
     return Decimal.parse(parsedStr);
@@ -348,7 +360,8 @@ class _Parser {
   bool get _isAtEnd => index >= input.length;
   bool get _peekIsLetter => !_isAtEnd && _isLetter(input[index]);
 
-  bool _isDigit(String value) => value.codeUnitAt(0) >= 48 && value.codeUnitAt(0) <= 57;
+  bool _isDigit(String value) =>
+      value.codeUnitAt(0) >= 48 && value.codeUnitAt(0) <= 57;
   bool _isLetter(String value) {
     final code = value.codeUnitAt(0);
     return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);

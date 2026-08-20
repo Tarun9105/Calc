@@ -14,11 +14,13 @@ ThemeData buildSmartCalcTheme(
           : CalculatorThemeMode.dark)
       : themeMode;
   final isLight = effectiveMode == CalculatorThemeMode.light;
-  final background = isLight ? const Color(0xFFFFFFFF) : const Color(0xFF000000);
+  final background =
+      isLight ? const Color(0xFFFFFFFF) : const Color(0xFF000000);
   final operator = customOperatorColor ?? const Color(0xFFFF9500);
   final digit = isLight ? const Color(0xFF8E8E93) : const Color(0xFF333333);
   final function = isLight ? const Color(0xFFD1D1D6) : const Color(0xFFA5A5A5);
-  final scientific = isLight ? const Color(0xFFE5E5EA) : const Color(0xFF1C1C1C);
+  final scientific =
+      isLight ? const Color(0xFFE5E5EA) : const Color(0xFF1C1C1C);
   final textOnSurface = isLight ? Colors.black : Colors.white;
 
   return ThemeData(

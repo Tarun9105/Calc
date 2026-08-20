@@ -4,7 +4,7 @@ import 'memory_repository.dart';
 
 class HiveMemoryRepository implements MemoryRepository {
   HiveMemoryRepository() : _box = Hive.box<MemoryValue>('memory');
-  
+
   final Box<MemoryValue> _box;
 
   @override

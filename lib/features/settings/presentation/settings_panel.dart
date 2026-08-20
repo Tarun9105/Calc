@@ -89,7 +89,7 @@ class SettingsPanel extends StatelessWidget {
   Widget _themeMenu(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return DropdownButton<CalculatorThemeMode>(
       value: settings.themeMode,
       dropdownColor: isDark ? const Color(0xFF1C1C1C) : const Color(0xFFF2F2F7),
@@ -128,7 +128,7 @@ class SettingsPanel extends StatelessWidget {
 
   Widget _precisionControl(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -163,11 +163,13 @@ class SettingsPanel extends StatelessWidget {
     required ValueChanged<bool> onChanged,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(label, style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7))),
+        Text(label,
+            style:
+                TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7))),
         Switch(
           value: value,
           onChanged: onChanged,
@@ -179,7 +181,7 @@ class SettingsPanel extends StatelessWidget {
   Widget _colorSelector(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final colors = [
-      null, // default orange
+      null,
       Colors.blue.value,
       Colors.green.value,
       Colors.purple.value,
@@ -198,7 +200,8 @@ class SettingsPanel extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: colors.map((cValue) {
-              final color = cValue == null ? const Color(0xFFFF9500) : Color(cValue);
+              final color =
+                  cValue == null ? const Color(0xFFFF9500) : Color(cValue);
               final isSelected = settings.customOperatorColorValue == cValue;
               return GestureDetector(
                 onTap: () => onCustomOperatorColorChanged(cValue),
@@ -210,7 +213,9 @@ class SettingsPanel extends StatelessWidget {
                     color: color,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isSelected ? colorScheme.onSurface : Colors.transparent,
+                      color: isSelected
+                          ? colorScheme.onSurface
+                          : Colors.transparent,
                       width: 2,
                     ),
                   ),
@@ -225,7 +230,7 @@ class SettingsPanel extends StatelessWidget {
 
   Widget _backgroundTextInput(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -235,19 +240,25 @@ class SettingsPanel extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextField(
-          controller: TextEditingController(text: settings.customButtonBackgroundText)..selection = TextSelection.collapsed(offset: settings.customButtonBackgroundText?.length ?? 0),
-          onChanged: (v) => onCustomButtonBackgroundTextChanged(v.isEmpty ? null : v),
+          controller:
+              TextEditingController(text: settings.customButtonBackgroundText)
+                ..selection = TextSelection.collapsed(
+                    offset: settings.customButtonBackgroundText?.length ?? 0),
+          onChanged: (v) =>
+              onCustomButtonBackgroundTextChanged(v.isEmpty ? null : v),
           style: TextStyle(color: colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Enter text here',
-            hintStyle: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.3)),
+            hintStyle:
+                TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.3)),
             filled: true,
             fillColor: colorScheme.onSurface.withValues(alpha: 0.05),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
         ),
       ],

@@ -60,16 +60,15 @@ class HistoryPanel extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 12, 8),
             child: TextButton(
-                  onPressed: onClearAll,
-                  child: const Text('Clear All'),
-                ),
+              onPressed: onClearAll,
+              child: const Text('Clear All'),
+            ),
           ),
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: history.length,
             itemBuilder: (context, index) {
-              // Reverse display order: newest entry shown first
               final realIndex = history.length - 1 - index;
               final entry = history[realIndex];
               return ListTile(

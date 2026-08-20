@@ -16,4 +16,3 @@ class CalculatorResult {
 
   bool get isSuccess => error == null;
 }
-

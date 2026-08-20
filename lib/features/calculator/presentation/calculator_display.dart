@@ -78,7 +78,7 @@ class CalculatorDisplay extends StatelessWidget {
             label: 'Expression: ${expression.isEmpty ? '0' : expression}',
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              reverse: true, // auto-scrolls to the end naturally
+              reverse: true,
               child: Text(
                 expression.isEmpty ? '0' : expression,
                 style: expressionStyle.copyWith(

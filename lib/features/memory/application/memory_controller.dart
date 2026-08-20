@@ -2,15 +2,12 @@ import '../../history/domain/history_entry.dart';
 import '../../memory/application/memory_repository.dart';
 import '../../history/application/history_repository.dart';
 
-
 class MemoryController {
   MemoryController({
     MemoryRepository? memoryRepository,
     HistoryRepository? historyRepository,
-  })  : _memoryRepository =
-            memoryRepository ?? InMemoryMemoryRepository(),
-        _historyRepository =
-            historyRepository ?? InMemoryHistoryRepository() {
+  })  : _memoryRepository = memoryRepository ?? InMemoryMemoryRepository(),
+        _historyRepository = historyRepository ?? InMemoryHistoryRepository() {
     _memoryValue = _memoryRepository.load()?.value;
     _history = _historyRepository.load();
   }
@@ -23,7 +20,6 @@ class MemoryController {
 
   double? get memoryValue => _memoryValue;
   List<HistoryEntry> get history => _history;
-
 
   void memoryClear() {
     _memoryRepository.clear();
